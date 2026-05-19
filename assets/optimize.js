@@ -16,10 +16,10 @@
   function fallbackEntry() {
     return '<div class="pt-entry" style="padding-top:20px;">' +
       '<div class="pt-header"><div>' +
-        '<a href="https://oyecreations.com" target="_blank" rel="noopener" class="pt-domain">oyecreations.com <span class="p-arrow">↗</span></a>' +
-        '<span class="pt-biz">OYE Creations LLC · Albuquerque, NM</span>' +
+        '<a href="https://droptimize.org" target="_blank" rel="noopener" class="pt-domain">droptimize.org <span class="p-arrow">↗</span></a>' +
+        '<span class="pt-biz">Droptimize - by OYE Creations</span>' +
       '</div></div>' +
-      '<p style="font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:0.06em;color:var(--muted);">Audit runs every Monday automatically.</p>' +
+      '<p style="font-family:\'DM Mono\',monospace;font-size:12px;letter-spacing:0.06em;color:var(--muted);">Audit runs every Monday automatically.</p>' +
     '</div>';
   }
 
@@ -56,8 +56,8 @@
         var passClass = c.pass ? 'pv-gold' : 'pv-red';
         var nameColor = c.pass ? 'var(--muted)' : '#E05A3A';
         return '<div class="live-check-item">' +
-          '<span class="' + passClass + '" style="font-size:11px;">' + (c.pass ? '✓' : '✗') + '</span>' +
-          '<span style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:' + nameColor + ';">' + c.name + '</span>' +
+          '<span class="' + passClass + '" style="font-size:13px;">' + (c.pass ? '✓' : '✗') + '</span>' +
+          '<span style="font-size:12px;text-transform:uppercase;letter-spacing:0.07em;color:' + nameColor + ';">' + c.name + '</span>' +
         '</div>';
       }).join('');
 
@@ -65,8 +65,8 @@
         '<div class="pt-entry" style="padding-top:20px;">' +
           '<div class="pt-header">' +
             '<div>' +
-              '<a href="https://oyecreations.com" target="_blank" rel="noopener" class="pt-domain">oyecreations.com <span class="p-arrow">↗</span></a>' +
-              '<span class="pt-biz">OYE Creations LLC · Albuquerque, NM</span>' +
+              '<a href="https://droptimize.org" target="_blank" rel="noopener" class="pt-domain">droptimize.org <span class="p-arrow">↗</span></a>' +
+              '<span class="pt-biz">Droptimize - by OYE Creations</span>' +
             '</div>' +
             '<div class="p-tags">' +
               '<span class="p-tag p-tag--gold">Live</span>' +
@@ -75,7 +75,7 @@
           '</div>' +
           '<div class="live-score-grid">' + scoreBlocks + '</div>' +
           (checks.length ? '<div class="live-check-grid">' + checkItems + '</div>' : '') +
-          (psiUnavailable ? '<p style="font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:0.06em;color:var(--muted);margin-top:10px;">Lighthouse scores unavailable - PSI quota. Security verified via headers.</p>' : '') +
+          (psiUnavailable ? '<p style="font-family:\'DM Mono\',monospace;font-size:12px;letter-spacing:0.06em;color:var(--muted);margin-top:10px;">Lighthouse scores unavailable - PSI quota. Security verified via headers.</p>' : '') +
         '</div>';
     })
     .catch(function() {
