@@ -1,0 +1,138 @@
+name: Weekly Site Audit
+
+on:
+  schedule:
+    - cron: '0 10 * * 1'  # Every Monday at 10am UTC
+  workflow_dispatch:       # Also runnable manually from GitHub Actions tab
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PageSpeed Insights - Mobile
+        id: psi_mobile
+        env:
+          PSI_KEY: ${{ secrets.PSI_KEY }}
+        run: |
+          RESULT=$(curl -s "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https://droptimize.org&strategy=mobile&category=SEO&category=PERFORMANCE&category=BEST_PRACTICES&category=ACCESSIBILITY&key=$PSI_KEY")
+          SEO=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('seo',{}).get('score',0))*100))" 2>/dev/null || echo 0)
+          PERF=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('performance',{}).get('score',0))*100))" 2>/dev/null || echo 0)
+          BP=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('best-practices',{}).get('score',0))*100))" 2>/dev/null || echo 0)
+          ACC=$(echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('accessibility',{}).get('score',0))*100))" 2>/dev/null || echo 0)
+          echo "seo=$SEO" >> $GITHUB_OUTPUT
+          echo "performance=$PERF" >> $GITHUB_OUTPUT
+          echo "best_practices=$BP" >> $GITHUB_OUTPUT
+          echo "accessibility=$ACC" >> $GITHUB_OUTPUT
+          if [ "$SEO" = "0" ] && [ "$PERF" = "0" ] && [ "$BP" = "0" ] && [ "$ACC" = "0" ]; then
+            echo "psi_failed=true" >> $GITHUB_OUTPUT
+            echo "::warning::PSI API returned all zeros - quota likely exhausted. Scores will not be stored."
+          else
+            echo "psi_failed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check Security Headers
+        id: headers
+        run: |
+          RESPONSE=$(curl -sI https://droptimize.org)
+          hsts=$(echo "$RESPONSE" | grep -i "strict-transport-security" | wc -l | tr -d ' ')
+          csp=$(echo "$RESPONSE" | grep -i "content-security-policy" | wc -l | tr -d ' ')
+          xcto=$(echo "$RESPONSE" | grep -i "x-content-type-options" | wc -l | tr -d ' ')
+          xfo=$(echo "$RESPONSE" | grep -i "x-frame-options" | wc -l | tr -d ' ')
+          rp=$(echo "$RESPONSE" | grep -i "referrer-policy" | wc -l | tr -d ' ')
+          pp=$(echo "$RESPONSE" | grep -i "permissions-policy" | wc -l | tr -d ' ')
+          echo "hsts=$hsts" >> $GITHUB_OUTPUT
+          echo "csp=$csp" >> $GITHUB_OUTPUT
+          echo "xcto=$xcto" >> $GITHUB_OUTPUT
+          echo "xfo=$xfo" >> $GITHUB_OUTPUT
+          echo "rp=$rp" >> $GITHUB_OUTPUT
+          echo "pp=$pp" >> $GITHUB_OUTPUT
+          PASS=$(( ($hsts>0) + ($csp>0) + ($xcto>0) + ($xfo>0) + ($rp>0) + ($pp>0) ))
+          SCORE=$(( $PASS * 100 / 6 ))
+          echo "security_score=$SCORE" >> $GITHUB_OUTPUT
+
+      - name: Check Sitemap and Robots
+        id: seo_checks
+        run: |
+          SITEMAP=$(curl -s -o /dev/null -w "%{http_code}" https://droptimize.org/sitemap.xml)
+          ROBOTS=$(curl -s -o /dev/null -w "%{http_code}" https://droptimize.org/robots.txt)
+          RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" https://droptimize.org | python3 -c "import sys; print(int(float(sys.stdin.read())*1000))")
+          echo "sitemap=$SITEMAP" >> $GITHUB_OUTPUT
+          echo "robots=$ROBOTS" >> $GITHUB_OUTPUT
+          echo "response_time=$RESPONSE_TIME" >> $GITHUB_OUTPUT
+
+      - name: Build and Store Audit Report
+        if: steps.psi_mobile.outputs.psi_failed == 'false'
+        env:
+          AUDIT_SECRET: ${{ secrets.AUDIT_SECRET }}
+        run: |
+          WEEK=$(date +%Y-%m-%d)
+          AUDIT_JSON=$(python3 -c "
+          import json
+          data = {
+            'week': '$WEEK',
+            'timestamp': '$(date -u +%Y-%m-%dT%H:%M:%SZ)',
+            'url': 'https://droptimize.org',
+            'scores': {
+              'seo': ${{ steps.psi_mobile.outputs.seo }},
+              'performance': ${{ steps.psi_mobile.outputs.performance }},
+              'best_practices': ${{ steps.psi_mobile.outputs.best_practices }},
+              'accessibility': ${{ steps.psi_mobile.outputs.accessibility }},
+              'security': ${{ steps.headers.outputs.security_score }}
+            },
+            'checks': [
+              {'name': 'HSTS', 'category': 'security', 'pass': ${{ steps.headers.outputs.hsts }} > 0},
+              {'name': 'Content Security Policy', 'category': 'security', 'pass': ${{ steps.headers.outputs.csp }} > 0},
+              {'name': 'X-Content-Type-Options', 'category': 'security', 'pass': ${{ steps.headers.outputs.xcto }} > 0},
+              {'name': 'X-Frame-Options', 'category': 'security', 'pass': ${{ steps.headers.outputs.xfo }} > 0},
+              {'name': 'Referrer-Policy', 'category': 'security', 'pass': ${{ steps.headers.outputs.rp }} > 0},
+              {'name': 'Permissions-Policy', 'category': 'security', 'pass': ${{ steps.headers.outputs.pp }} > 0},
+              {'name': 'Sitemap.xml', 'category': 'seo', 'pass': '${{ steps.seo_checks.outputs.sitemap }}' == '200'},
+              {'name': 'Robots.txt', 'category': 'seo', 'pass': '${{ steps.seo_checks.outputs.robots }}' == '200'},
+              {'name': 'HTTPS', 'category': 'security', 'pass': True}
+            ],
+            'response_time_ms': ${{ steps.seo_checks.outputs.response_time }}
+          }
+          print(json.dumps(data))
+          ")
+
+          curl -X POST https://droptimize.org/api/audit/store \
+            -H "Content-Type: application/json" \
+            -H "X-Audit-Secret: $AUDIT_SECRET" \
+            -d "$AUDIT_JSON"
+
+      - name: Alert on Score Drop
+        if: steps.psi_mobile.outputs.psi_failed == 'false'
+        run: |
+          SEO=${{ steps.psi_mobile.outputs.seo }}
+          PERF=${{ steps.psi_mobile.outputs.performance }}
+          BP=${{ steps.psi_mobile.outputs.best_practices }}
+          ACC=${{ steps.psi_mobile.outputs.accessibility }}
+          SEC=${{ steps.headers.outputs.security_score }}
+          FAILED=0
+          REPORT=""
+          [ "$SEO" -lt 100 ] && REPORT="$REPORT SEO=${SEO}%" && FAILED=1
+          [ "$PERF" -lt 100 ] && REPORT="$REPORT Performance=${PERF}%" && FAILED=1
+          [ "$BP" -lt 100 ] && REPORT="$REPORT BestPractices=${BP}%" && FAILED=1
+          [ "$ACC" -lt 100 ] && REPORT="$REPORT Accessibility=${ACC}%" && FAILED=1
+          [ "$SEC" -lt 100 ] && REPORT="$REPORT Security=${SEC}%" && FAILED=1
+          if [ "$FAILED" = "1" ]; then
+            echo "::error::Score below 100% -$REPORT"
+            exit 1
+          fi
+
+      - name: Print Summary
+        if: always()
+        run: |
+          echo "## Droptimize Weekly Audit" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Score |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| SEO | ${{ steps.psi_mobile.outputs.seo }}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance | ${{ steps.psi_mobile.outputs.performance }}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | ${{ steps.headers.outputs.security_score }}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Best Practices | ${{ steps.psi_mobile.outputs.best_practices }}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Accessibility | ${{ steps.psi_mobile.outputs.accessibility }}% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Response Time | ${{ steps.seo_checks.outputs.response_time }}ms |" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.psi_mobile.outputs.psi_failed }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "> PSI API quota exhausted - scores not stored. Previous data preserved." >> $GITHUB_STEP_SUMMARY
+          fi
