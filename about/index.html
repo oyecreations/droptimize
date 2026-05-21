@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About droptimize.org - How the Standard Was Built | OYE Creations</title>
+<meta name="description" content="droptimize.org started by fixing our own sites. Every broken header, every contrast failure, every ARIA gap became a rule. That rule library is now the build standard - and it shows." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://droptimize.org/about/" />
+
+<meta property="og:title" content="About droptimize.org - How the Standard Was Built" />
+<meta property="og:description" content="Started by fixing our own sites. Every fix became a rule. Every rule became a standard. Now new builds start at 96-100% before we touch anything." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://droptimize.org/about/" />
+
+<style>
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:optional;src:url('/assets/fonts/dm-mono-400.woff2') format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:optional;src:url('/assets/fonts/dm-mono-500.woff2') format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:100 900;font-display:optional;src:url('/assets/fonts/dm-sans.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:700 900;font-display:optional;src:url('/assets/fonts/playfair.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:italic;font-weight:700;font-display:optional;src:url('/assets/fonts/playfair-italic.woff2') format('woff2')}
+
+:root {
+  --bg:       #111111;
+  --surface:  #1B1B1B;
+  --surface2: #232323;
+  --border:   #2E2E2E;
+  --gold:     #C9A84C;
+  --gold-dim: #8A6F2E;
+  --text:     #EBEBEB;
+  --muted:    #8C8C8C;
+  --warm:     #F5F3EE;
+  --coral:    #E05A3A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: "DM Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; padding-top: 36px; }
+a { color: var(--gold); transition: color 150ms; }
+a:hover { color: var(--warm); }
+
+/* OYE BAR */
+.oye-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 102; height: 36px; background: #090806; border-bottom: 1px solid rgba(201,168,76,0.12); display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem; }
+.oye-brand { display: flex; align-items: center; gap: 0.45rem; text-decoration: none; color: rgba(255,255,255,0.82); font-family: "Playfair Display", serif; font-size: 0.75rem; font-weight: 600; transition: color 150ms; }
+.oye-brand em { font-style: normal; color: #C9A84C; transition: color 150ms; }
+.oye-brand:hover { color: #C9A84C; }
+.oye-brand:hover em { color: rgba(255,255,255,0.82); }
+.oye-net-links { display: flex; align-items: center; gap: 1.1rem; }
+.oye-net-link { font-family: "DM Mono", monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 150ms; white-space: nowrap; }
+.oye-net-link:hover { color: #C9A84C; }
+@media (max-width: 700px) { .oye-net-links { display: none; } }
+
+/* NAV */
+nav { position: sticky; top: 36px; z-index: 100; background: rgba(17,17,17,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; height: 64px; display: flex; align-items: center; }
+.nav-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.nav-name { font-family: "Playfair Display", serif; font-size: 18px; font-weight: 700; color: var(--text); transition: color 150ms; }
+.nav-name span { color: var(--gold); }
+.nav-brand:hover .nav-name { color: var(--gold); }
+.nav-brand:hover .nav-name span { color: var(--text); }
+.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links a { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+@media (max-width: 640px) { .nav-links { display: none; } }
+
+.container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+/* HERO */
+.hero { padding: 88px 24px 72px; text-align: center; border-bottom: 1px solid var(--border); }
+.eyebrow { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: block; }
+.hero h1 { font-family: "Playfair Display", serif; font-size: clamp(34px, 5.5vw, 58px); font-weight: 900; color: var(--warm); line-height: 1.1; margin-bottom: 24px; }
+.hero h1 em { color: var(--gold); font-style: italic; }
+.hero p { font-size: 18px; color: var(--muted); max-width: 640px; margin: 0 auto; line-height: 1.75; }
+
+/* SECTION */
+.section { padding: 72px 24px; border-bottom: 1px solid var(--border); }
+.section-label { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 16px; }
+h2 { font-family: "Playfair Display", serif; font-size: clamp(26px, 3.5vw, 38px); color: var(--warm); line-height: 1.2; margin-bottom: 24px; }
+h2 em { font-style: italic; color: var(--gold); }
+.body-text { font-size: 16px; color: #C8C8C8; line-height: 1.8; margin-bottom: 18px; max-width: 720px; }
+.body-text:last-child { margin-bottom: 0; }
+
+/* TIMELINE */
+.timeline { display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
+.tl-entry { display: grid; grid-template-columns: 140px 1fr; gap: 24px; padding: 24px 0; border-top: 1px solid var(--border); }
+.tl-entry:last-child { border-bottom: 1px solid var(--border); }
+.tl-meta { display: flex; flex-direction: column; gap: 6px; padding-top: 2px; }
+.tl-site { font-family: "DM Mono", monospace; font-size: 12px; color: var(--gold); letter-spacing: 0.05em; }
+.tl-date { font-family: "DM Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+.tl-body h3 { font-family: "Playfair Display", serif; font-size: 18px; color: var(--warm); margin-bottom: 8px; }
+.tl-body p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.tl-scores { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.tl-score { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.08em; padding: 3px 8px; border: 1px solid var(--border); color: var(--muted); }
+.tl-score.bad { border-color: rgba(224,90,58,0.4); color: #E05A3A; }
+.tl-score.ok { border-color: rgba(201,168,76,0.3); color: var(--gold); }
+.tl-score.good { border-color: rgba(74,222,128,0.3); color: #4ADE80; }
+@media (max-width: 600px) { .tl-entry { grid-template-columns: 1fr; gap: 8px; } }
+
+/* SCORE CARDS */
+.score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2px; margin-top: 40px; }
+.score-card { background: var(--surface); padding: 28px 24px; border-top: 3px solid var(--gold-dim); }
+.score-card-label { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
+.score-card h3 { font-family: "Playfair Display", serif; font-size: 18px; color: var(--warm); margin-bottom: 10px; }
+.score-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+.score-card .real-talk { font-family: "DM Mono", monospace; font-size: 12px; color: #C0C0C0; letter-spacing: 0.04em; margin-top: 12px; padding: 8px 12px; border-left: 2px solid var(--gold-dim); line-height: 1.6; }
+
+/* PROOF */
+.proof-bar { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 24px 28px; margin-top: 40px; }
+.proof-bar-label { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
+.proof-scores { display: flex; gap: 28px; flex-wrap: wrap; }
+.proof-score { display: flex; flex-direction: column; gap: 4px; }
+.proof-score-num { font-family: "DM Mono", monospace; font-size: 22px; font-weight: 500; color: #4ADE80; line-height: 1; }
+.proof-score-cat { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+/* PROCESS */
+.process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; margin-top: 40px; }
+.process-step { background: var(--surface); padding: 28px 24px; border-top: 3px solid var(--border); }
+.process-step.gold-top { border-top-color: var(--gold); }
+.process-num { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 14px; display: block; }
+.process-step h3 { font-family: "Playfair Display", serif; font-size: 18px; color: var(--warm); margin-bottom: 8px; }
+.process-step p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+/* FOOTER */
+footer { background: var(--bg); border-top: 1px solid var(--border); padding: 48px 24px; }
+footer .inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+footer .f-brand { font-family: "Playfair Display", serif; font-size: 18px; font-weight: 700; color: var(--warm); }
+footer .f-brand span { color: var(--gold); }
+footer .f-links { display: flex; gap: 20px; flex-wrap: wrap; }
+footer .f-links a { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; }
+footer .f-links a:hover { color: var(--gold); }
+footer .f-copy { font-size: 12px; color: var(--muted); }
+
+.cta-link { display: inline-block; background: var(--gold); color: #111; font-family: "DM Mono", monospace; font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 13px 28px; text-decoration: none; transition: opacity 150ms; margin-top: 32px; }
+.cta-link:hover { opacity: 0.85; color: #111; }
+</style>
+</head>
+<body>
+
+<!-- OYE BAR -->
+<div class="oye-bar">
+  <a href="https://oyecreations.com" target="_blank" rel="noopener noreferrer" class="oye-brand" aria-label="OYE Creations">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 350" style="height:18px;width:auto" aria-hidden="true">
+      <ellipse cx="250" cy="175" rx="205" ry="135" fill="none" stroke="#C9A84C" stroke-width="13" stroke-linecap="round"/>
+      <defs><clipPath id="oyecp-ab"><ellipse cx="250" cy="175" rx="191" ry="121"/></clipPath></defs>
+      <g clip-path="url(#oyecp-ab)" stroke="#C9A84C" stroke-width="13" stroke-linecap="round" fill="none">
+        <circle cx="148" cy="175" r="63"/>
+        <line x1="175" y1="80" x2="250" y2="168"/><line x1="320" y1="80" x2="250" y2="168"/>
+        <line x1="250" y1="168" x2="250" y2="265"/>
+        <line x1="318" y1="112" x2="318" y2="240"/><line x1="318" y1="112" x2="388" y2="112"/>
+        <line x1="318" y1="176" x2="383" y2="176"/><line x1="318" y1="240" x2="393" y2="240"/>
+      </g>
+    </svg>
+    <span>OYE <em>Creations</em></span>
+  </a>
+  <nav class="oye-net-links" aria-label="OYE network">
+    <a href="https://oyecreations.com" class="oye-net-link">OYE Creations</a>
+    <a href="https://buzzresume.com" target="_blank" rel="noopener noreferrer" class="oye-net-link">ResumeBuzz</a>
+    <a href="https://multilingo.studio" target="_blank" rel="noopener noreferrer" class="oye-net-link">Multilingo</a>
+  </nav>
+</div>
+
+<nav aria-label="Site navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand" aria-label="droptimize.org home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 56" width="32" height="37" role="img" aria-label="droptimize logo" fill="none">
+        <path d="M6,20 A18,18 0 0,1 42,20 Q42,38 24,54 Q6,38 6,20 Z" fill="#C9A84C"/>
+        <polyline points="13,28 24,14 35,28" stroke="#111111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="nav-name">droptimize<span>.org</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#portfolio">Portfolio</a></li>
+      <li><a href="/#pricing">Pricing</a></li>
+      <li><a href="/about/" class="active">About</a></li>
+      <li><a href="/#audit-form">Get Audited</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">About droptimize.org</span>
+    <h1>Built by fixing<br>our own <em>mistakes.</em></h1>
+    <p>droptimize.org didn't start as a service. It started as a process we built for ourselves - auditing every OYE Creations property, fixing what was broken, and writing down every rule we learned. This is that story, and what it means for your site.</p>
+  </div>
+</section>
+
+<!-- ORIGIN STORY -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">The origin</span>
+    <h2>We audited ourselves first.</h2>
+    <p class="body-text">Every OYE Creations property - the podcast site, the resume service, the AI platform, the main brand page - had been built at different times, by different people, under different constraints. When we looked at them honestly, they weren't in great shape.</p>
+    <p class="body-text">Security headers missing. Contrast ratios failing. ARIA attributes wrong. Meta tags incomplete. Performance held back by external fonts and unoptimized images. None of it was catastrophic on its own - but together, it meant Google was ranking the sites lower than they deserved, some browsers were flashing security warnings before visitors even landed, and screen reader users couldn't navigate key sections at all.</p>
+    <p class="body-text">So we fixed them. All of them. And every fix got written down.</p>
+
+    <div class="timeline">
+      <div class="tl-entry">
+        <div class="tl-meta">
+          <span class="tl-site">multilingo.studio</span>
+          <span class="tl-date">May 2026</span>
+        </div>
+        <div class="tl-body">
+          <h3>Worst security score in the portfolio.</h3>
+          <p>No CSP. No HSTS. No CORP headers at all - the Next.js app shipped with nothing. Accessibility issues came from component library defaults that quietly failed WCAG AA contrast. Dynamic routes were missing canonical tags, costing SEO signals on every page.</p>
+          <div class="tl-scores">
+            <span class="tl-score bad">Security ~38%</span>
+            <span class="tl-score ok">SEO ~84%</span>
+            <span class="tl-score ok">A11y ~76%</span>
+            <span class="tl-score good">Final 100%</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-entry">
+        <div class="tl-meta">
+          <span class="tl-site">buzzresume.com</span>
+          <span class="tl-date">May 2026</span>
+        </div>
+        <div class="tl-body">
+          <h3>Migrated from subdomain. Exposed immediately.</h3>
+          <p>Cloudflare's default robots.txt blocked all crawlers - 2,064 SEO errors before the site was even announced. Security landed at 58% with no protective headers. The domain migration wiped config we thought would carry over. It didn't.</p>
+          <div class="tl-scores">
+            <span class="tl-score bad">Security ~58%</span>
+            <span class="tl-score ok">SEO ~75%</span>
+            <span class="tl-score good">Final 100%</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-entry">
+        <div class="tl-meta">
+          <span class="tl-site">colinautorepairs.com</span>
+          <span class="tl-date">May 2026</span>
+        </div>
+        <div class="tl-body">
+          <h3>First external client. Handover went sideways.</h3>
+          <p>Built clean to 100% on our end. Client-side DNS changes during handover tanked all scores - security dropped to ~20%, accessibility to ~30%, SEO to ~40%. We stepped back in, identified what changed, and closed everything at 100%.</p>
+          <div class="tl-scores">
+            <span class="tl-score bad">Security 0% audit</span>
+            <span class="tl-score bad">Post-transfer ~20%</span>
+            <span class="tl-score good">Final 100%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE STANDARD -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">How the standard was built</span>
+    <h2>Every fix became a rule.<br>Every rule became <em>the build.</em></h2>
+    <p class="body-text">After enough audits, the patterns stopped being surprising. Security headers were missing on every site that didn't specifically set them. Contrast ratios failed on text that looked fine to the designer but failed WCAG AA at actual measurements. ARIA attributes were added by developers who had the right idea but the wrong implementation. Meta descriptions got skipped under deadline pressure.</p>
+    <p class="body-text">So we stopped treating these as individual bugs and started treating them as a checklist - a build standard applied before the first line of HTML, not patched in after the audit. Self-hosted fonts. Explicit image dimensions. Security headers on every path. Muted text at minimum #8C8C8C, never #777777. Aria-labels on every interactive element without visible text.</p>
+    <p class="body-text">The standard is now what we build from, not what we fix toward.</p>
+
+    <div class="proof-bar">
+      <span class="proof-bar-label">The proof - OYE Scholar, built from scratch using the standard</span>
+      <p style="font-family:'DM Mono',monospace;font-size:13px;color:#B0B0B0;letter-spacing:0.04em;line-height:1.6;margin-bottom:16px;">Audited at launch on oyecreations.com/scholar before a single fix was applied. These are opening scores, not final ones.</p>
+      <div class="proof-scores">
+        <div class="proof-score">
+          <span class="proof-score-num">100%</span>
+          <span class="proof-score-cat">Performance</span>
+        </div>
+        <div class="proof-score">
+          <span class="proof-score-num">94%</span>
+          <span class="proof-score-cat">Accessibility</span>
+        </div>
+        <div class="proof-score">
+          <span class="proof-score-num">92%</span>
+          <span class="proof-score-cat">Best Practices</span>
+        </div>
+        <div class="proof-score">
+          <span class="proof-score-num">100%</span>
+          <span class="proof-score-cat">SEO</span>
+        </div>
+        <div class="proof-score">
+          <span class="proof-score-num">~92%</span>
+          <span class="proof-score-cat">Security</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT THE SCORES ACTUALLY MEAN -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Plain terms</span>
+    <h2>What these scores<br>actually do to your business.</h2>
+    <p class="body-text">Lighthouse scores aren't vanity metrics. Each one maps directly to something that costs you customers, ranking, or trust - usually all three.</p>
+
+    <div class="score-grid">
+      <div class="score-card">
+        <span class="score-card-label">Performance</span>
+        <h3>Your site is too slow. People are leaving.</h3>
+        <p>Every additional second of load time costs roughly 7% of visitors. Google uses page speed as a direct ranking factor - a slow site ranks lower than a fast one with identical content.</p>
+        <p class="real-talk">A 60% performance score isn't a yellow flag. It means your homepage takes 4-6 seconds to load on a mobile connection. Most people are gone by second 3.</p>
+      </div>
+      <div class="score-card">
+        <span class="score-card-label">SEO</span>
+        <h3>Google can't read you. You don't exist.</h3>
+        <p>SEO isn't just keywords. It's whether search engines can crawl your pages, understand what they're about, and trust that the content is legitimate. Missing meta tags, broken canonical URLs, and blocked robots.txt all count against you.</p>
+        <p class="real-talk">A 65% SEO score means Google is guessing at what half your pages are about. It's ranking you for things you didn't intend - or not ranking you at all.</p>
+      </div>
+      <div class="score-card">
+        <span class="score-card-label">Security</span>
+        <h3>Open doors. Some browsers warn visitors before they arrive.</h3>
+        <p>Missing security headers - HSTS, Content Security Policy, X-Frame-Options - leave your site vulnerable to clickjacking, script injection, and cross-origin attacks. Some of these gaps trigger browser-level warnings that visitors see before your page loads.</p>
+        <p class="real-talk">A 0% security score, like Colin Auto had at initial audit, means no protective headers at all. Any halfway-decent scanner flags your site as unsafe. That includes the scanners potential clients and partners run.</p>
+      </div>
+      <div class="score-card">
+        <span class="score-card-label">Accessibility</span>
+        <h3>Part of your audience literally can't use your site.</h3>
+        <p>Contrast failures, missing labels, broken keyboard navigation - these aren't edge cases. 15-20% of people have some form of disability that affects how they browse. Screen readers, keyboard navigation, and zoom usage are more common than most developers account for.</p>
+        <p class="real-talk">Beyond the human cost, ADA compliance is increasingly enforced in the US. Businesses have been successfully sued over inaccessible websites. A 70% accessibility score is a documented liability.</p>
+      </div>
+      <div class="score-card">
+        <span class="score-card-label">Best Practices</span>
+        <h3>It works today. It breaks quietly over time.</h3>
+        <p>Best Practices catches deprecated APIs, insecure HTTP requests, outdated libraries, and techniques browsers are actively phasing out. None of these cause immediate visible failures - they accumulate until something stops working and nobody knows why.</p>
+        <p class="real-talk">The site your developer handed over in 2019 has been aging against browser updates ever since. Best Practices is the score that tells you how much it's drifted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section class="section" style="border-bottom:none;">
+  <div class="container">
+    <span class="section-label">The process</span>
+    <h2>What actually happens<br>when you <em>drop your URL.</em></h2>
+    <p class="body-text">Four steps. One deliverable: a site that scores 100% across all five categories, lives in your name, and doesn't depend on us after handover.</p>
+
+    <div class="process-grid">
+      <div class="process-step gold-top">
+        <span class="process-num">STEP 01</span>
+        <h3>Audit</h3>
+        <p>Full scored report across all five categories. Every gap documented with a plain-English explanation and a fix priority. No jargon. No upsell. Just what's broken and how bad it is.</p>
+      </div>
+      <div class="process-step gold-top">
+        <span class="process-num">STEP 02</span>
+        <h3>Rebuild</h3>
+        <p>Plain HTML, CSS, and JavaScript. No WordPress. No page builders. No monthly platform fees that disappear if you stop paying. We don't ship until every category hits 100%.</p>
+      </div>
+      <div class="process-step gold-top">
+        <span class="process-num">STEP 03</span>
+        <h3>Transfer</h3>
+        <p>Your code goes to your GitHub. Your site goes to your Cloudflare account. DNS setup is documented step by step. You own everything - including the ability to walk away.</p>
+      </div>
+      <div class="process-step gold-top">
+        <span class="process-num">STEP 04</span>
+        <h3>Verify</h3>
+        <p>Post-transfer audit runs in your environment, not ours. Scores confirmed live. You get the report. If anything dropped during transfer, we fix it before we close.</p>
+      </div>
+    </div>
+
+    <a href="/#audit-form" class="cta-link">Drop Your URL - Free Audit &rarr;</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <div>
+      <div class="f-brand">droptimize<span>.org</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.08em;color:var(--muted);margin-top:6px;">by <a href="https://oyecreations.com" target="_blank" rel="noopener" style="color:var(--muted);">OYE Creations</a></div>
+    </div>
+    <div class="f-links">
+      <a href="/#how-it-works">How It Works</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/about/">About</a>
+      <a href="/#audit-form">Get Audited</a>
+      <a href="https://oyecreations.com/privacy">Privacy</a>
+    </div>
+    <div>
+      <div class="f-copy">&copy; 2026 OYE Creations LLC. All rights reserved.</div>
+      <div class="f-copy" style="margin-top:4px;">10% of every project donated to 501(c)(3) charities.</div>
+    </div>
+  </div>
+</footer>
+
+</main>
+</body>
+</html>
