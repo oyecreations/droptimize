@@ -1001,7 +1001,7 @@
               </tbody>
             </table>
           </div>
-          <p class="pt-note">SEO started at 100% - strong existing domain signals meant no indexing work needed. Accessibility gaps were unlabeled interactive elements on chord cards and contrast failures on secondary label text. Security was one header short at audit and pre-launch. Best Practices hit 100% after disabling Cloudflare Bot Management JS detections, which had been injecting deprecated-API code on every page load. Performance at 93% - the news section pulls cover images from Wikimedia Commons which can't be served as WebP or cached locally. Full news section rebuild pending.</p>
+          <p class="pt-note">SEO started at 100% - strong existing domain signals meant no indexing work needed. Accessibility gaps were unlabeled interactive elements on chord cards and contrast failures on secondary label text. Security was one header short at audit and pre-launch. Best Practices hit 100% after disabling Cloudflare Bot Management JS detections, which had been injecting deprecated-API code on every page load. Performance at 93% - LCP is 3.2s because the featured news rotator is JavaScript-rendered: the browser can't fetch cover images until JS executes and injects them into the DOM. All covers are now locally hosted as WebP (converted from Wikimedia JPEG). Remaining LCP improvement requires server-side rendering the first article inline in the HTML.</p>
           <div class="al-wrap">
             <button class="al-btn" data-domain="guitaranon.com" aria-expanded="false" aria-controls="al-guitaranon-com"><span class="al-icon" aria-hidden="true">&#x25BE;</span> Audit History</button>
             <div class="al-panel" id="al-guitaranon-com" hidden></div>
