@@ -712,15 +712,43 @@
          When adding new entries: internal goes before colinautorepairs; colinautorepairs drops to hidden. -->
     <div class="pt-list">
 
-      <!-- 1 - OYE Scholar (oyecreations.com/scholar) - internal, May 2026 -->
+      <!-- 1 - expathway.com - internal, May 2026 -->
       <div class="pt-entry">
         <div class="pt-header">
           <div>
-            <a href="https://oyecreations.com/scholar" target="_blank" rel="noopener" class="pt-domain">oyecreations.com/scholar <span class="p-arrow">&#x2197;</span></a>
-            <span class="pt-biz">OYE Creations - Scholarship Advisory &amp; AI Essay Tool</span>
+            <a href="https://expathway.com" target="_blank" rel="noopener" class="pt-domain">expathway.com <span class="p-arrow">&#x2197;</span></a>
+            <span class="pt-biz">Expathway - Expat Life &amp; Travel Advice</span>
           </div>
           <div class="p-tags">
-            <span class="p-tag" style="border-color:rgba(201,168,76,0.4);color:var(--gold);">In Progress</span>
+            <span class="p-tag p-tag--gold">Completed</span>
+            <span class="p-tag">Internal</span>
+            <span class="p-date">May 2026</span>
+          </div>
+        </div>
+        <div class="pt-table-wrap">
+          <table class="pt-table">
+            <thead><tr><th></th><th>1 - Audit</th><th>2 - Fixed</th><th class="pt-th-final">3 - Verified</th></tr></thead>
+            <tbody>
+              <tr><td class="pt-cat">SEO</td><td class="pv-amber">91%</td><td class="pv-gold">100%</td><td class="pv-gold pt-final">100%</td></tr>
+              <tr><td class="pt-cat">Security</td><td class="pv-gold">100%</td><td class="pv-gold">100%</td><td class="pv-gold pt-final">100%</td></tr>
+              <tr><td class="pt-cat">Performance</td><td class="pv-gold">100%</td><td class="pv-gold">100%</td><td class="pv-gold pt-final">100%</td></tr>
+              <tr><td class="pt-cat">Accessibility</td><td class="pv-amber">95%</td><td class="pv-gold">100%</td><td class="pv-gold pt-final">100%</td></tr>
+              <tr><td class="pt-cat">Best Practices</td><td class="pv-amber">92%</td><td class="pv-gold">100%</td><td class="pv-gold pt-final">100%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pt-note">New OYE internal property built from scratch. Initial audit exposed three gaps: (1) Accessibility 95% - muted text color #64748B on light blue #F0F9FF measured 4.46:1, just under the 4.5:1 WCAG AA threshold for small text; 5 social links had aria-labels that didn't include full visible text, triggering label-in-name failures. (2) Best Practices 92% - inline window.OYEChat config script blocked by CSP since script-src had no unsafe-inline. (3) SEO 91% - no robots.txt file, CF Pages serving 404 which Lighthouse parsed as 335 malformed directives. Fixes: darkened muted text to #546070 (5.56:1 on that bg), removed mismatched aria-labels from social links (visible text is descriptive), moved chat config to external /assets/chat-config.js, added robots.txt and sitemap.xml. All four categories verified at 100%.</p>
+      </div>
+
+      <!-- 2 - OYE Scholar (oyescholar.com) - internal, May 2026 -->
+      <div class="pt-entry">
+        <div class="pt-header">
+          <div>
+            <a href="https://oyescholar.com" target="_blank" rel="noopener" class="pt-domain">oyescholar.com <span class="p-arrow">&#x2197;</span></a>
+            <span class="pt-biz">OYE Scholar - College &amp; Higher Education Advisory</span>
+          </div>
+          <div class="p-tags">
+            <span class="p-tag p-tag--gold">Completed</span>
             <span class="p-tag">Internal</span>
             <span class="p-date">May 2026</span>
           </div>
@@ -729,15 +757,15 @@
           <table class="pt-table">
             <thead><tr><th></th><th>1 - Audit</th><th>2 - Transfer</th><th class="pt-th-final">3 - Final</th></tr></thead>
             <tbody>
-              <tr><td class="pt-cat">SEO</td><td class="pv-amber">92%</td><td class="pv-muted" style="color:var(--muted);">Pending</td><td class="pv-muted pt-final" style="color:var(--muted);">Pending</td></tr>
+              <tr><td class="pt-cat">SEO</td><td class="pv-amber">92%</td><td class="pv-gold">91%</td><td class="pv-gold pt-final">100%</td></tr>
               <tr><td class="pt-cat">Security</td><td class="pv-amber">~92%</td><td class="pv-muted" style="color:var(--muted);">Pending</td><td class="pv-muted pt-final" style="color:var(--muted);">Pending</td></tr>
-              <tr><td class="pt-cat">Accessibility</td><td class="pv-amber">93%</td><td class="pv-muted" style="color:var(--muted);">Pending</td><td class="pv-muted pt-final" style="color:var(--muted);">Pending</td></tr>
-              <tr><td class="pt-cat">Best Practices</td><td class="pv-amber">92%</td><td class="pv-muted" style="color:var(--muted);">Pending</td><td class="pv-muted pt-final" style="color:var(--muted);">Pending</td></tr>
-              <tr><td class="pt-cat">Performance</td><td class="pv-amber">96%</td><td class="pv-muted" style="color:var(--muted);">Pending</td><td class="pv-muted pt-final" style="color:var(--muted);">Pending</td></tr>
+              <tr><td class="pt-cat">Performance</td><td class="pv-amber">96%</td><td class="pv-gold">99%</td><td class="pv-gold pt-final">99%</td></tr>
+              <tr><td class="pt-cat">Accessibility</td><td class="pv-amber">93%</td><td class="pv-gold">93%</td><td class="pv-gold pt-final">100%</td></tr>
+              <tr><td class="pt-cat">Best Practices</td><td class="pv-amber">92%</td><td class="pv-gold">92%</td><td class="pv-gold pt-final">100%</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="pt-note">Two pages audited: scholar landing (100/94/92/100 perf/a11y/bp/seo) and essay builder (96/93/92/92). Audit scores show the lower of the two pages. SEO gap: essay builder is missing a meta description tag. Accessibility gaps across both: contrast ratio failures on muted text in the light theme, prohibited ARIA attributes in the builder, visible form labels without matching accessible names. Security inherited from oyecreations.com _headers stack - estimated ~92% due to unsafe-inline in style-src. Transfer and Final scores pending - domain handover scheduled.</p>
+        <p class="pt-note">Migrated from oyecreations.com/scholar to standalone oyescholar.com. Pre-transfer audit: scholar landing (100/94/92/100 perf/a11y/bp/seo) and essay builder (96/93/92/92) - lower score per category shown. Final build: 98/100/100/100 across Performance, Accessibility, Best Practices, and SEO. Accessibility and Best Practices hit 100% after contrast fixes, label corrections, and CSP tuning. SEO hit 100% after disabling Cloudflare's robots.txt AI signal injection.</p>
       </div>
 
       <!-- 2 - bottomsupfam.com - internal, May 2026 -->
@@ -1080,7 +1108,7 @@ document.querySelectorAll('.checkout-btn').forEach(function(btn) {
   });
 });
 </script>
-<script>window.OYEChat = { brand: 'droptimize', adminUrl: 'https://admin.oyecreations.com' };</script>
-<script defer src="https://admin.oyecreations.com/assets/chat-widget.js"></script>
+<script>window.OYEChat = { brand: 'droptimize', adminUrl: 'https://bink.oyecreations.com' };</script>
+<script defer src="https://bink.oyecreations.com/assets/chat-widget.js"></script>
 </body>
 </html>
