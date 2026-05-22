@@ -469,6 +469,28 @@
     footer .f-links a { min-height: 44px; padding: 0 4px; font-size: 14px; }
     .cta { display: block; text-align: center; }
   }
+  /* Audit log dropdown */
+  .al-wrap { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .al-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); background: none; border: none; cursor: pointer; padding: 3px 0;
+    transition: color 150ms;
+  }
+  .al-btn:hover { color: var(--gold); }
+  .al-icon { display: inline-block; transition: transform 220ms; font-style: normal; font-size: 10px; }
+  .al-btn[aria-expanded="true"] .al-icon { transform: rotate(180deg); }
+  .al-panel { margin-top: 12px; }
+  .al-panel[hidden] { display: none; }
+  .al-table-wrap { overflow-x: auto; }
+  .al-table { width: 100%; border-collapse: collapse; font-family: 'DM Mono', monospace; font-size: 12px; }
+  .al-table th { text-align: left; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; padding: 0 10px 8px 0; font-weight: 400; }
+  .al-table td { padding: 5px 10px 5px 0; border-top: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  .al-date { color: var(--muted) !important; }
+  .al-empty { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+  .al-cta { margin-top: 12px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; line-height: 1.6; }
+  .al-cta a { color: var(--gold); text-decoration: none; }
+  .al-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -629,7 +651,7 @@
           <li>1-page clean rebuild (HTML/CSS/JS)</li>
           <li>Cloudflare Pages deployment</li>
           <li>Handover docs &amp; DNS setup</li>
-          <li>Live score verification (90-100 target, aiming for 100)</li>
+          <li>90+ in every category - or your money back</li>
           <li>You own everything - no lock-in</li>
         </ul>
         <a href="#" class="pricing-cta pricing-cta--ghost checkout-btn" data-plan="single">Get Started</a>
@@ -646,7 +668,7 @@
           <li>Cloudflare Pages deployment</li>
           <li>Admin panel for content edits</li>
           <li>Handover docs &amp; DNS setup</li>
-          <li>Live score verification (90-100 target, aiming for 100)</li>
+          <li>90+ in every category - or your money back</li>
           <li>You own everything - no lock-in</li>
         </ul>
         <a href="#" class="pricing-cta checkout-btn" data-plan="standard">Get Started</a>
@@ -685,6 +707,14 @@
         <a href="#audit-form" class="pricing-cta pricing-cta--ghost">Contact Us</a>
       </div>
 
+    </div>
+
+    <div style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.2);padding:24px 32px;margin-top:16px;margin-bottom:16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+      <div style="font-size:28px;line-height:1;">&#x2713;</div>
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4ADE80;margin-bottom:6px;">The Score Guarantee</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;color:#C0C0C0;line-height:1.6;">Every paid rebuild is guaranteed to hit 90 or above in all five Lighthouse categories - SEO, Security, Performance, Accessibility, and Best Practices. We push for 100. If we deliver and any category lands below 90, you get a full refund. No argument.</div>
+      </div>
     </div>
 
     <div class="give-back-banner">
