@@ -24,6 +24,8 @@ jobs:
             domain: "expathway.com"
           - url: "https://buzzresume.com"
             domain: "buzzresume.com"
+          - url: "https://bottomsupfam.com"
+            domain: "bottomsupfam.com"
 
     steps:
       - name: PageSpeed Insights - Mobile
