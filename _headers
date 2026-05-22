@@ -7,4 +7,4 @@
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
   X-XSS-Protection: 0
-  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; script-src 'self' https://static.cloudflareinsights.com https://admin.oyecreations.com; connect-src 'self' https://cloudflareinsights.com https://admin.oyecreations.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; script-src 'self' https://static.cloudflareinsights.com https://bink.oyecreations.com; connect-src 'self' https://cloudflareinsights.com https://bink.oyecreations.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
