@@ -18,10 +18,8 @@
   function fallbackEntry() {
     return '<div class="live-audit-bar">' +
       '<div class="live-audit-meta">' +
-        LOGO_SVG +
-        '<div class="live-audit-indicator"><span class="live-pulse"></span><span class="live-audit-lbl">Live</span></div>' +
-        '<a href="https://droptimize.org" target="_blank" rel="noopener" class="live-audit-domain">droptimize.org &#x2197;</a>' +
-        '<span class="live-audit-date">Audit runs every Monday</span>' +
+        '<div class="live-audit-top">' + LOGO_SVG + '<div class="live-audit-indicator"><span class="live-pulse"></span><span class="live-audit-lbl">Live</span></div></div>' +
+        '<div class="live-audit-bottom"><a href="https://droptimize.org" target="_blank" rel="noopener" class="live-audit-domain">droptimize.org &#x2197;</a><span class="live-audit-date">Audit runs every Monday</span></div>' +
       '</div>' +
       '<div class="live-score-grid">' +
         ['Search Engine','Security','Performance','Accessibility','Best Practices'].map(function(l) {
@@ -64,10 +62,8 @@
       list.innerHTML =
         '<div class="live-audit-bar">' +
           '<div class="live-audit-meta">' +
-            LOGO_SVG +
-            '<div class="live-audit-indicator"><span class="live-pulse"></span><span class="live-audit-lbl">Live</span></div>' +
-            '<a href="https://droptimize.org" target="_blank" rel="noopener" class="live-audit-domain">droptimize.org &#x2197;</a>' +
-            '<span class="live-audit-date">' + date + '</span>' +
+            '<div class="live-audit-top">' + LOGO_SVG + '<div class="live-audit-indicator"><span class="live-pulse"></span><span class="live-audit-lbl">Live</span></div></div>' +
+            '<div class="live-audit-bottom"><a href="https://droptimize.org" target="_blank" rel="noopener" class="live-audit-domain">droptimize.org &#x2197;</a><span class="live-audit-date">' + date + '</span></div>' +
           '</div>' +
           '<div class="live-score-grid">' + scoreBlocks + '</div>' +
         '</div>' +

@@ -381,7 +381,9 @@
   .live-audit-section { border-top: 1px solid var(--border); padding: 14px 24px; }
   .live-audit-bar { display: flex; align-items: stretch; border: 1px solid rgba(74,222,128,0.18); overflow: hidden; box-shadow: 0 0 24px rgba(74,222,128,0.05); }
   .live-audit-meta { display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 12px 16px; background: rgba(74,222,128,0.03); border-right: 1px solid rgba(74,222,128,0.12); min-width: 160px; flex-shrink: 0; }
-  .live-audit-logo { height: 24px; width: auto; flex-shrink: 0; display: block; }
+  .live-audit-logo { height: 20px; width: auto; flex-shrink: 0; }
+  .live-audit-top { display: flex; align-items: center; gap: 8px; }
+  .live-audit-bottom { display: flex; align-items: center; gap: 10px; }
   .live-audit-indicator { display: flex; align-items: center; gap: 6px; }
   .live-pulse { width: 5px; height: 5px; border-radius: 50%; background: #4ADE80; box-shadow: 0 0 6px #4ADE80; animation: live-blink 2s ease infinite; flex-shrink: 0; }
   @keyframes live-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
@@ -402,7 +404,6 @@
   @media (max-width: 768px) {
     .live-audit-bar { flex-direction: column; overflow: visible; }
     .live-audit-meta { border-right: none; border-bottom: 1px solid rgba(74,222,128,0.12); flex-direction: column; align-items: flex-start; gap: 6px; }
-    .live-audit-logo { height: 20px; margin-bottom: 2px; }
     .live-score-grid { flex-wrap: wrap; }
     .live-score-tile { flex: 0 0 33.333%; padding: 10px 4px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
     .live-score-tile:nth-child(3n) { border-right: none; }
@@ -1196,7 +1197,7 @@
 </footer>
 
 <script defer src="/assets/nav.js"></script>
-<script defer src="/assets/optimize.js?v=13"></script>
+<script defer src="/assets/optimize.js?v=14"></script>
 <script defer src="/assets/checkout.js"></script>
 <script src="/assets/chat-config.js"></script>
 <script defer src="https://bink.oyecreations.com/assets/chat-widget.js?v=16"></script>
