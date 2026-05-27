@@ -202,8 +202,8 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
 <section class="hero">
   <div class="container">
     <span class="eyebrow">About droptimize.org</span>
-    <h1>Your scores dropped.<br>You didn't change <em>a thing.</em></h1>
-    <p>That's the part nobody warns you about. Automated processes running on top of your site - CDN features, bot management, third-party scripts, browser security updates - can tank a perfect score without touching a single line of your code. We've documented every pattern. Here's what you need to know.</p>
+    <h1>Your site has problems<br>you don't know <em>about yet.</em></h1>
+    <p>Most business owners think their website is fine. It looks good. It loads. People can click things. That's not the same as a website that Google trusts, that loads fast on a phone, and that doesn't quietly scare visitors away. Here's what's actually happening - and why it matters more than you think.</p>
   </div>
 </section>
 
@@ -241,40 +241,40 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            My site looks fine. Why would it score poorly?
+            My site looks fine to me. Why would anything be wrong?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Lighthouse doesn't measure how your site looks - it measures what search engines crawl, what visitors on slow connections experience, and what browsers flag before a page even loads. A site can look polished at your desk on a fast connection and fail in every category that actually moves the needle.</p>
-            <p>Missing security headers are invisible until a browser warning appears. Contrast ratios look fine until you run a WCAG measurement tool. Meta tags seem optional until Google starts ranking you for the wrong keywords - or not at all.</p>
-            <div class="callout warn">The gap between "looks fine" and "performs well" is exactly where we work. Every issue we've documented was invisible until we measured it.</div>
+            <p>Looking good on your screen and performing well for everyone else are two completely different things. You're viewing it at your desk, on a fast connection, in a browser that already has everything cached. That's not how most of your visitors see it.</p>
+            <p>Someone on their phone at a coffee shop has a totally different experience. Google's crawler has a different experience. Someone using a screen reader because they have a visual impairment has a different experience. An audit measures those experiences - not just yours.</p>
+            <div class="callout warn">The problems we find are almost always invisible to the owner. That's exactly what makes them problems.</div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What do Lighthouse scores actually cost me in real terms?
+            OK but what does a bad score actually mean for my business?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Each category maps directly to lost revenue, ranking, or legal exposure:</p>
-            <p><strong style="color:var(--warm)">Performance:</strong> Every extra second of load time costs roughly 7% of visitors. Google uses page speed as a direct ranking factor. A 60% performance score means your page takes 4-6 seconds on a mobile connection - most people leave by second 3.</p>
-            <p><strong style="color:var(--warm)">SEO:</strong> A 65% SEO score means Google is guessing at what half your pages are about. You rank for things you didn't intend, or not at all.</p>
-            <p><strong style="color:var(--warm)">Security:</strong> Missing headers (HSTS, CSP, X-Frame-Options) leave you open to clickjacking and script injection. Some gaps trigger browser-level warnings that visitors see before your page loads.</p>
-            <p><strong style="color:var(--warm)">Accessibility:</strong> 15-20% of people have a disability that affects how they browse. Beyond the human cost, ADA compliance is increasingly enforced - businesses have been sued over inaccessible websites.</p>
-            <p><strong style="color:var(--warm)">Best Practices:</strong> Deprecated APIs and outdated libraries don't break immediately. They accumulate until something stops working and nobody knows why.</p>
+            <p>Each score category is costing you something specific:</p>
+            <p><strong style="color:var(--warm)">Speed (Performance):</strong> If your site takes more than 3 seconds to load on a phone, most people leave before they see anything. Every extra second costs you roughly 7% of visitors. Google also ranks faster sites higher - so slow means both fewer visitors and lower search position.</p>
+            <p><strong style="color:var(--warm)">Search ranking (SEO):</strong> A bad SEO score means Google can't figure out what your site is about. It either doesn't show your site in results, or shows it for the wrong searches. You're invisible to people who are actively looking for what you offer.</p>
+            <p><strong style="color:var(--warm)">Security:</strong> A site with missing security protections can trigger a "this site may not be safe" warning in some browsers - before your page even loads. That's customers gone before they saw a single word you wrote.</p>
+            <p><strong style="color:var(--warm)">Accessibility:</strong> About 1 in 6 people has some kind of disability that affects how they use the internet. If your site doesn't work for them, they leave - and you can actually be sued for it in the US. This has happened to real businesses over regular websites.</p>
+            <p><strong style="color:var(--warm)">Best Practices:</strong> This one is quieter. It's the "stuff that will break eventually" score. Old code that browsers are phasing out. Things that work today and will stop working in a year with no warning.</p>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            I had my site built professionally. Wouldn't it already be clean?
+            A professional built my site. Shouldn't it already be good?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Web standards move faster than most development shops update their defaults. Security header requirements have tightened significantly in the last three years. WCAG accessibility rules have been clarified in ways that break patterns that were acceptable in 2020. Chrome and Safari have each shifted what they flag and when.</p>
-            <p>The site your developer shipped two years ago was built against that era's standards. It hasn't been maintained against this era's. Neither has the platform it's hosted on.</p>
-            <div class="callout">We've audited sites built by reputable agencies that were genuinely excellent when they launched. Every one of them had drifted. Not because of bad work - because time passed.</div>
+            <p>It probably was good - when it was built. The internet changes constantly. Security rules that didn't exist two years ago are now required. Browsers have started flagging things they used to let slide. Google has updated what it rewards and penalizes in search rankings.</p>
+            <p>Nobody goes back and updates your old site to match the new rules. That's not how it works. The site ages while the standards move forward.</p>
+            <div class="callout">We've audited sites built by good agencies that scored terribly - not because the work was bad, but because the site was two or three years old and nobody had touched it since.</div>
           </div>
         </div>
 
@@ -284,51 +284,49 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
     <!-- GROUP 2: Automated processes -->
     <div class="faq-group">
       <span class="faq-group-label">Part 02</span>
-      <h2 class="faq-group-title">Why automated processes<br>are often the <em>real culprit.</em></h2>
+      <h2 class="faq-group-title">Why the real problem is usually<br>stuff <em>nobody wrote.</em></h2>
       <div class="faq-list" role="list">
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What do you mean by "automated processes breaking scores"?
+            What do you mean "stuff nobody wrote"?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Your hosting provider, CDN, and any third-party tools running on your domain are all modifying what visitors actually receive - often without your knowledge. They inject scripts, override headers, rewrite URLs, and block crawlers using their own defaults.</p>
-            <p>The critical insight: a site can score 100% in a clean test environment and drop to 81% in production because of what the infrastructure layer adds after deploy. That gap is entirely invisible if you only audit the code you wrote.</p>
-            <div class="callout warn">This is the most common source of "inexplicable" score drops. The code didn't change. The environment did.</div>
+            <p>The company that hosts your website has their own software running on top of it. They use it to block spam, protect against attacks, hide email addresses from bots, and dozens of other things. Most of it is turned on by default. Most owners have no idea it's there.</p>
+            <p>The problem is that some of these features quietly add extra code to your pages every time someone visits. That extra code slows things down, confuses Google, and can tank scores that had nothing wrong with them.</p>
+            <div class="callout warn">We've seen a perfectly clean site drop from 100 to 81 because the hosting company flipped on a spam protection feature. The site itself didn't change at all. The hosting did it.</div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What specific processes have you seen tank Lighthouse scores?
+            Can you give me real examples of this?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>These are patterns we've documented firsthand on live properties - not hypotheticals:</p>
-            <p><strong style="color:var(--warm)">Cloudflare Bot Management (Browser Integrity Check):</strong> When enabled, CF injects a challenge script from <code style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)">cdn-cgi/challenge-platform/</code> on every page load. This script is render-blocking and uncontrolled - it dropped Best Practices from 100 to 92 and Performance from 100 to 81 on multiple sites. The code was clean. CF was the cause.</p>
-            <p><strong style="color:var(--warm)">Cloudflare Email Obfuscation:</strong> If your pages have mailto links or plain email addresses, CF's "Scrape Shield" feature injects <code style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)">email-decode.min.js</code> - a render-blocking script that adds ~150ms to page load on every visit. Enabled by default on most Cloudflare plans.</p>
-            <p><strong style="color:var(--warm)">CF Managed robots.txt:</strong> Cloudflare's "Manage your robots.txt" feature injects a <code style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)">Content-Signal</code> header that reduces SEO scores to 92. It operates separately from the "Block AI bots" setting - you can disable one without affecting the other.</p>
-            <p><strong style="color:var(--warm)">Stale CDN cache after deploy:</strong> Edge caches don't always clear immediately after a new deploy. Visitors receive old JS and CSS for hours or days after you've pushed a fix. Score improvements that are real in testing don't show up in production until cache purge propagates.</p>
-            <p><strong style="color:var(--warm)">Third-party script updates:</strong> Analytics, chat widgets, and review platforms update their embed scripts without notice. A script that passed last month's audit may have added 80KB or a new fingerprinting API this month.</p>
+            <p>These are things we found on our own sites - not things we read about:</p>
+            <p><strong style="color:var(--warm)">Bot protection that slows everything down:</strong> One popular hosting feature adds a security check to every page load. It's supposed to block bots. What it actually does is add a chunk of code that loads before anything else - which means your visitor is waiting for that to finish before your site even starts to appear. We watched it drop scores from 100 to 81 on multiple sites.</p>
+            <p><strong style="color:var(--warm)">Email address hiding that slows your page:</strong> If your site has your email address written out, the hosting company might automatically scramble it to hide it from spam bots. Noble goal. Problem is, the way they unscramble it for real visitors is by adding a script that runs on every page load. That script adds about a sixth of a second to your load time every single visit.</p>
+            <p><strong style="color:var(--warm)">Search settings that hurt your Google ranking:</strong> One hosting feature designed to help with search rankings actually adds a hidden instruction that tells Google your site is less trustworthy. It's a default setting. It quietly costs you ranking every day it's on.</p>
+            <p><strong style="color:var(--warm)">Your fixes not actually showing up:</strong> Hosting companies cache your site - they save a copy of it and serve that copy to visitors instead of the live version. This makes things faster. It also means when you fix something, visitors might still see the broken version for hours or days. Your developer says it's fixed. The hosting is still serving the old version.</p>
             <div class="pill-row">
-              <span class="pill bad">BIC: BP 92 → 81</span>
-              <span class="pill bad">Email Obfuscation: +150ms LCP</span>
-              <span class="pill bad">robots.txt header: SEO 92</span>
-              <span class="pill bad">CSP + Turnstile: BP 92</span>
+              <span class="pill bad">Bot protection: score 100 drops to 81</span>
+              <span class="pill bad">Email hiding: site loads slower</span>
+              <span class="pill bad">Search setting: Google ranks you lower</span>
             </div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            How do you even find these infrastructure-level issues?
+            How do you find things that nobody can see?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>You audit the live environment, not just the code. Every audit we run starts with a curl against the live domain before we look at a single line of source. We're checking what the domain actually delivers - injected scripts, headers, redirects - not what the repo says it should deliver.</p>
-            <div class="callout">A developer who only audits their local build or staging environment will miss every one of these. They're invisible until you curl the production URL and grep for what shouldn't be there.</div>
-            <p>This is why "my developer just fixed it" sometimes doesn't change the score. If the fix was applied to code but the infrastructure-level issue wasn't addressed, the score won't move.</p>
+            <p>We check what your site actually delivers to visitors - not what the code says it should deliver. Those are sometimes different things. The hosting company can change what gets sent without touching a single file.</p>
+            <p>Think of it like this: your kitchen might be spotless, but if the delivery driver keeps adding something to the bag before it arrives, the customer gets something different from what you made. We check the bag, not just the kitchen.</p>
+            <div class="callout">This is why "my developer just fixed it" sometimes doesn't change anything. If the problem was in the delivery, not the kitchen, fixing the kitchen doesn't help.</div>
           </div>
         </div>
 
@@ -338,35 +336,34 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
     <!-- GROUP 3: Why we're qualified -->
     <div class="faq-group">
       <span class="faq-group-label">Part 03</span>
-      <h2 class="faq-group-title">Why we're uniquely<br><em>qualified</em> to fix this.</h2>
+      <h2 class="faq-group-title">Why we actually<br>know what we're <em>doing.</em></h2>
       <div class="faq-list" role="list">
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What makes droptimize different from any other web agency?
+            Why should I trust you over anyone else?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>We didn't build this service and then develop a methodology. We built the methodology on our own properties first - 8 live sites across different stacks, hosting configs, and use cases - and the service came from what we learned. Every failure pattern in our rulebook was discovered in production, not in theory.</p>
-            <p>When we say Cloudflare Email Obfuscation injects a render-blocking script, we're not citing documentation. We found it while debugging why a 100%-scored site was suddenly underperforming after a CF setting was changed. We diagnosed it with a curl check, disabled it via the API, and wrote down the exact command so it never takes more than 30 seconds to fix.</p>
-            <div class="callout">The build standard we use isn't a best-practices checklist from a blog post. It's a set of rules written specifically because we got burned by each one.</div>
+            <p>We didn't sit down one day and decide to start an audit service. We ran our own websites - eight of them - and they had problems. We fixed those problems, and we wrote down everything we learned. That list of lessons became the service.</p>
+            <p>Every bad pattern we warn you about is something we personally got burned by first. The hosting feature that slowed our sites down? We found it the hard way, on a live site, and spent time tracking down why a perfect score had suddenly dropped. We wrote down what it was, where to find it, and exactly how to turn it off. Now it takes us 30 seconds to fix instead of hours.</p>
+            <div class="callout">We're not selling you a checklist we found online. We're selling you the list of things we wish we'd known before we had to learn them the hard way.</div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            Why plain HTML instead of WordPress or a page builder?
+            Why do you build with plain code instead of WordPress?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>WordPress and page builders introduce layers between your content and what the browser receives. Each layer adds opportunities for the automated processes described above to interfere - plugin JS that loads unconditionally, CSS that's render-blocking by default, CMS-injected headers that conflict with security settings you thought you'd configured.</p>
-            <p>Plain HTML/CSS/JS has no hidden layer. What you write is what ships. Security headers go in a single <code style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)">_headers</code> file and apply exactly as written. Fonts are self-hosted. No dependency updates, no plugin compatibility breaks, no monthly platform fees that hold your content hostage.</p>
-            <p>You also own everything at handover - your GitHub repo, your Cloudflare account, your DNS. There's no proprietary format that requires our tools to edit or re-export.</p>
+            <p>WordPress is powerful, but it has a lot of moving parts. Plugins. Themes. Auto-updates. Every one of those is something that can break without warning, add unwanted code to your pages, or create security holes. Most WordPress sites are slower and more vulnerable than they need to be - not because WordPress is bad, but because all those layers add up.</p>
+            <p>We build with simple code: just the content, the design, and nothing else. No hidden extras. No monthly plugin subscriptions. No "your site broke because a plugin updated overnight." What we build is exactly what your visitors get - nothing more, nothing less.</p>
+            <p>And when we hand it over, it's yours completely. No special software needed to edit it. No platform you have to keep paying to stay on. If you want to walk away from us tomorrow, you can take the site with you and never think about us again.</p>
             <div class="pill-row">
-              <span class="pill gold">Zero render-blocking defaults</span>
-              <span class="pill gold">Self-hosted fonts</span>
-              <span class="pill gold">No platform lock-in</span>
-              <span class="pill gold">You own the code</span>
+              <span class="pill gold">No surprise extras added to your pages</span>
+              <span class="pill gold">No monthly platform fees</span>
+              <span class="pill gold">You own everything</span>
             </div>
           </div>
         </div>
@@ -377,62 +374,61 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
     <!-- GROUP 4: Ongoing monitoring -->
     <div class="faq-group" style="padding-bottom:72px;border-bottom:1px solid var(--border);">
       <span class="faq-group-label">Part 04</span>
-      <h2 class="faq-group-title">Why you need<br>ongoing monitoring - at least <em>30-60 days.</em></h2>
+      <h2 class="faq-group-title">Why you need someone<br>watching it for <em>30-60 days after.</em></h2>
       <div class="faq-list" role="list">
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            If we launch at 100%, why would anything change?
+            If you fix everything and it scores 100%, why keep watching?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Because the live environment continues to change after launch - without you doing anything. CDN edge caches take time to fully propagate new rules. Cloudflare periodically rolls out new default features (bot protection, image optimization, analytics) that can inject behavior into your pages. Google re-crawls on its own schedule and may start seeing things differently on the second or third visit.</p>
-            <p>The first 30 days after a new site goes live are when the environment settles. Cache layers stabilize. CF's monitoring tools start accumulating data about your domain and may trigger new rules. Real-device variance - the difference between a Pixel 6 on 4G in Dallas and the PSI test environment - becomes visible in the score data.</p>
-            <div class="callout">Launch day scores are a snapshot of one environment on one day. Monitoring scores over 30 days gives you a baseline of what real users actually experience.</div>
+            <p>Because the internet doesn't stop moving just because your site launched. Your hosting company keeps updating their software. Google comes back and looks at your site again on its own schedule. The scores you see on day one are a snapshot - not a permanent state.</p>
+            <p>The first month after a new site goes live is when things settle. The hosting company's systems start getting familiar with your domain and may start applying new rules. Google visits a few more times and forms a more complete picture. Real visitors on real devices in real locations show you things that a test environment doesn't.</p>
+            <div class="callout">Launching at 100% is the goal. Staying at 100% is the work. The first 30 days are when you find out if you're actually there.</div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What does "automated processes being the culprit" look like post-launch?
+            What does a score drop after launch actually look like?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Here's a real sequence we've observed: Site launches at 100%. Two weeks later, Best Practices drops to 92. No code changed. Investigation finds that Cloudflare's Browser Integrity Check was auto-enabled on the account - possibly by a security recommendation notification the owner dismissed without reading. The injected challenge script is now loading on every page.</p>
-            <p>This is not hypothetical. It's the exact scenario that prompted our three-step CF nuclear fix protocol: disable browser check, set security to essentially off, disable bot management JS via the API. Three commands. Score restored. But only if you're watching closely enough to catch the drop in the first place.</p>
-            <div class="callout warn">A site with no monitoring has no way of knowing when this happens. The scores quietly drift while the owner assumes everything is fine.</div>
+            <p>Here's exactly what happened to one of our own sites: launched at 100% on a Tuesday. Two weeks later, we noticed a score had dropped. We hadn't changed anything. We went digging and found that the hosting company had quietly turned on a spam protection feature - probably triggered by some internal recommendation their system made about our domain. That feature added extra code to every page load. We turned it off. Score went back to 100.</p>
+            <p>Without monitoring, we never would have known. The site would have sat there scoring poorly, losing search ranking, and we'd have assumed everything was fine because we hadn't touched it.</p>
+            <div class="callout warn">The most dangerous drops are the ones you don't see coming. Something changes quietly, scores drift down slowly, and by the time you notice, you've lost months of ranking.</div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What does monitoring look like after the first 30-60 days?
+            What does "monitoring" actually mean in practice?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>After the environment has settled, the risk profile shifts from infrastructure-layer surprises to application-layer drift. Browser security requirements tighten roughly quarterly - what passes today may flag six months from now. Third-party embeds update their scripts. A new page gets added without following the build standard.</p>
-            <p>All client builds include an automated weekly audit that runs every Monday and stores results to a dashboard you can check any time. It won't catch everything - some CF-level injections require a live curl check - but it catches score movement before it compounds.</p>
-            <p>The recommended cadence after initial stabilization: review the weekly audit monthly, run a full manual audit any time you add pages, integrate a third party, or change hosting configuration. That's it.</p>
+            <p>Every site we build includes an automated check that runs every Monday morning. It measures your scores across all five categories and saves the results to a dashboard. If something drops, you'll see it that week - not six months later.</p>
+            <p>After the first couple of months, you won't need to think about it much. Just glance at the dashboard once a month. The only time you'd want a full audit again is if you make a change to the site - add a new page, connect a booking system, switch hosting providers. Any of those can introduce new problems, and you want to know about them before Google does.</p>
             <div class="pill-row">
-              <span class="pill good">Weekly automated audit</span>
-              <span class="pill good">Score stored to dashboard</span>
-              <span class="pill gold">Catches drift before it compounds</span>
+              <span class="pill good">Automated check every Monday</span>
+              <span class="pill good">Scores saved to your dashboard</span>
+              <span class="pill gold">You find out before it becomes a problem</span>
             </div>
           </div>
         </div>
 
         <div class="faq-item" role="listitem">
           <button class="faq-q" aria-expanded="false">
-            What triggers a re-audit outside of the monthly review?
+            When should I get a full re-audit done?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a" role="region">
-            <p>Any of these should prompt a full re-audit, not just a score check:</p>
-            <p><strong style="color:var(--warm)">DNS or hosting changes</strong> - transferring a domain, switching nameservers, or adding a CDN layer can wipe security headers and redirect configurations you thought were permanent.</p>
-            <p><strong style="color:var(--warm)">Third-party integrations</strong> - adding a chat widget, booking system, payment embed, or analytics tool. Each one is a new script loading on your domain with its own headers, CSP conflicts, and performance budget.</p>
-            <p><strong style="color:var(--warm)">New pages or sections</strong> - especially if someone other than the original developer added them. New content added outside the build standard will rarely meet it by accident.</p>
-            <p><strong style="color:var(--warm)">A score drop you notice</strong> - even one category, even a few points. Score drops are symptoms of a specific cause. Ignoring them means the cause is still running.</p>
-            <div class="callout">The handover documentation we provide includes a full re-audit checklist tied to each of these triggers. You'll know exactly what to check and in what order.</div>
+            <p>Four situations call for a real look, not just a score check:</p>
+            <p><strong style="color:var(--warm)">You moved your site to a new host</strong> - Moving a site is like moving a restaurant to a new building. Everything might look the same but the plumbing is different. Security settings that were in place before can disappear completely in a move.</p>
+            <p><strong style="color:var(--warm)">You added something new</strong> - A chat widget, a booking calendar, a payment button, a review feed. Each one of these is a third-party tool loading its own code on your site. Any one of them can slow things down or create security gaps.</p>
+            <p><strong style="color:var(--warm)">Someone added new pages</strong> - Especially if it wasn't the original developer. New pages built without following the same standards will often have problems the rest of the site doesn't.</p>
+            <p><strong style="color:var(--warm)">Any score drops, even a little</strong> - A small drop usually means something specific changed. It won't fix itself, and it won't stay small forever. Find it now while it's easy.</p>
+            <div class="callout">We give you a plain checklist at handover that covers all of these. You'll know exactly what to look for and when - no guessing required.</div>
           </div>
         </div>
 
@@ -445,8 +441,8 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
 <!-- CTA -->
 <section class="cta-section" id="audit-form">
   <div class="container" style="max-width:600px;">
-    <h2>Drop your URL.<br>We'll tell you exactly what's running on it.</h2>
-    <p>Free audit. No sales call. Just a scored report across all five categories and plain-English documentation of every gap - including what infrastructure-level processes are running that you didn't write.</p>
+    <h2>Drop your URL.<br>We'll tell you what's actually wrong.</h2>
+    <p>Free audit. No sales call. Just a plain report that tells you where your site is losing visitors, ranking, and trust - and exactly what's causing it.</p>
     <a href="/#audit-form" class="cta-link">Get the Free Audit &rarr;</a>
   </div>
 </section>
