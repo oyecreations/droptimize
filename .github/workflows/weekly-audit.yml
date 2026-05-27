@@ -85,6 +85,7 @@ jobs:
         if: steps.psi_mobile.outputs.psi_failed == 'false'
         env:
           AUDIT_SECRET: ${{ secrets.AUDIT_SECRET }}
+          BINK_AUDIT_SECRET: ${{ secrets.BINK_AUDIT_SECRET }}
         run: |
           WEEK=$(date +%Y-%m-%d)
           AUDIT_JSON=$(python3 -c "
@@ -118,6 +119,10 @@ jobs:
           curl -X POST https://droptimize.org/api/audit/store \
             -H "Content-Type: application/json" \
             -H "X-Audit-Secret: $AUDIT_SECRET" \
+            -d "$AUDIT_JSON"
+          curl -X POST https://bink.oyecreations.com/api/audits/store-results \
+            -H "Content-Type: application/json" \
+            -H "X-Audit-Secret: $BINK_AUDIT_SECRET" \
             -d "$AUDIT_JSON"
 
       - name: Alert on Score Drop
