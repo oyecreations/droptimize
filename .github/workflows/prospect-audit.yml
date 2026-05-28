@@ -1,0 +1,154 @@
+name: Prospect Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Full URL with https:// (e.g. https://example.com)'
+        required: true
+        type: string
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PageSpeed Insights - Mobile
+        id: psi_mobile
+        env:
+          PSI_KEY: ${{ secrets.PSI_KEY }}
+          URL: ${{ inputs.url }}
+        run: |
+          curl -sS "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${URL}&strategy=mobile&category=SEO&category=PERFORMANCE&category=BEST_PRACTICES&category=ACCESSIBILITY&key=${PSI_KEY}" \
+            -o psi_mobile.json
+          SEO=$(python3 -c "import json; d=json.load(open('psi_mobile.json')); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('seo',{}).get('score',0) or 0)*100))")
+          PERF=$(python3 -c "import json; d=json.load(open('psi_mobile.json')); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('performance',{}).get('score',0) or 0)*100))")
+          BP=$(python3 -c "import json; d=json.load(open('psi_mobile.json')); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('best-practices',{}).get('score',0) or 0)*100))")
+          ACC=$(python3 -c "import json; d=json.load(open('psi_mobile.json')); print(round((d.get('lighthouseResult',{}).get('categories',{}).get('accessibility',{}).get('score',0) or 0)*100))")
+          echo "seo=$SEO" >> $GITHUB_OUTPUT
+          echo "performance=$PERF" >> $GITHUB_OUTPUT
+          echo "best_practices=$BP" >> $GITHUB_OUTPUT
+          echo "accessibility=$ACC" >> $GITHUB_OUTPUT
+
+      - name: Security Headers
+        id: headers
+        env:
+          URL: ${{ inputs.url }}
+        run: |
+          curl -sIL "$URL" -o headers.txt
+          hsts=$(grep -ic "strict-transport-security" headers.txt || true)
+          csp=$(grep -ic "content-security-policy" headers.txt || true)
+          xcto=$(grep -ic "x-content-type-options" headers.txt || true)
+          xfo=$(grep -ic "x-frame-options" headers.txt || true)
+          rp=$(grep -ic "referrer-policy" headers.txt || true)
+          pp=$(grep -ic "permissions-policy" headers.txt || true)
+          echo "hsts=$hsts" >> $GITHUB_OUTPUT
+          echo "csp=$csp" >> $GITHUB_OUTPUT
+          echo "xcto=$xcto" >> $GITHUB_OUTPUT
+          echo "xfo=$xfo" >> $GITHUB_OUTPUT
+          echo "rp=$rp" >> $GITHUB_OUTPUT
+          echo "pp=$pp" >> $GITHUB_OUTPUT
+          PASS=$(( ($hsts>0) + ($csp>0) + ($xcto>0) + ($xfo>0) + ($rp>0) + ($pp>0) ))
+          SCORE=$(( $PASS * 100 / 6 ))
+          echo "security_score=$SCORE" >> $GITHUB_OUTPUT
+
+      - name: SEO + Response time
+        id: seo_checks
+        env:
+          URL: ${{ inputs.url }}
+        run: |
+          SITEMAP=$(curl -s -o /dev/null -w "%{http_code}" "${URL}/sitemap.xml")
+          ROBOTS=$(curl -s -o /dev/null -w "%{http_code}" "${URL}/robots.txt")
+          RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" "$URL" | python3 -c "import sys; print(int(float(sys.stdin.read())*1000))")
+          echo "sitemap=$SITEMAP" >> $GITHUB_OUTPUT
+          echo "robots=$ROBOTS" >> $GITHUB_OUTPUT
+          echo "response_time=$RESPONSE_TIME" >> $GITHUB_OUTPUT
+
+      - name: Build report JSON with top failing audits
+        env:
+          URL: ${{ inputs.url }}
+          SEO: ${{ steps.psi_mobile.outputs.seo }}
+          PERF: ${{ steps.psi_mobile.outputs.performance }}
+          BP: ${{ steps.psi_mobile.outputs.best_practices }}
+          ACC: ${{ steps.psi_mobile.outputs.accessibility }}
+          SEC: ${{ steps.headers.outputs.security_score }}
+          HSTS: ${{ steps.headers.outputs.hsts }}
+          CSP: ${{ steps.headers.outputs.csp }}
+          XCTO: ${{ steps.headers.outputs.xcto }}
+          XFO: ${{ steps.headers.outputs.xfo }}
+          RP: ${{ steps.headers.outputs.rp }}
+          PP: ${{ steps.headers.outputs.pp }}
+          SITEMAP: ${{ steps.seo_checks.outputs.sitemap }}
+          ROBOTS: ${{ steps.seo_checks.outputs.robots }}
+          RT: ${{ steps.seo_checks.outputs.response_time }}
+        run: |
+          python3 <<'PY' > report.json
+          import json, os, datetime
+          data = json.load(open('psi_mobile.json'))
+          cats = data.get('lighthouseResult', {}).get('categories', {})
+          audits = data.get('lighthouseResult', {}).get('audits', {})
+
+          def failing(cat_key, limit=6):
+              cat = cats.get(cat_key, {})
+              refs = cat.get('auditRefs', []) or []
+              out = []
+              for ref in refs:
+                  if not ref.get('weight'): continue
+                  a = audits.get(ref['id'])
+                  if not a or a.get('score') is None: continue
+                  if a['score'] >= 0.9: continue
+                  out.append({
+                      'id': ref['id'],
+                      'title': a.get('title', ref['id']),
+                      'description': a.get('description', ''),
+                      'score': a.get('score'),
+                      'displayValue': a.get('displayValue', ''),
+                      'weight': ref.get('weight'),
+                  })
+              out.sort(key=lambda x: (x['score'], -x['weight']))
+              return out[:limit]
+
+          report = {
+              'url': os.environ['URL'],
+              'timestamp': datetime.datetime.utcnow().isoformat() + 'Z',
+              'scores': {
+                  'seo': int(os.environ['SEO']),
+                  'performance': int(os.environ['PERF']),
+                  'best_practices': int(os.environ['BP']),
+                  'accessibility': int(os.environ['ACC']),
+                  'security': int(os.environ['SEC']),
+              },
+              'security_headers': {
+                  'hsts': int(os.environ['HSTS']) > 0,
+                  'csp': int(os.environ['CSP']) > 0,
+                  'x_content_type_options': int(os.environ['XCTO']) > 0,
+                  'x_frame_options': int(os.environ['XFO']) > 0,
+                  'referrer_policy': int(os.environ['RP']) > 0,
+                  'permissions_policy': int(os.environ['PP']) > 0,
+              },
+              'seo_checks': {
+                  'sitemap_xml': os.environ['SITEMAP'],
+                  'robots_txt': os.environ['ROBOTS'],
+              },
+              'response_time_ms': int(os.environ['RT']),
+              'failing_audits': {
+                  'seo': failing('seo'),
+                  'performance': failing('performance'),
+                  'best_practices': failing('best-practices'),
+                  'accessibility': failing('accessibility'),
+              },
+              'lighthouse_version': data.get('lighthouseResult', {}).get('lighthouseVersion'),
+              'fetch_time': data.get('lighthouseResult', {}).get('fetchTime'),
+              'final_url': data.get('lighthouseResult', {}).get('finalUrl'),
+          }
+          print(json.dumps(report, indent=2))
+          PY
+          cat report.json
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prospect-audit
+          path: |
+            report.json
+            psi_mobile.json
+            headers.txt
