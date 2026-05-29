@@ -1,3 +1,27 @@
+// Lifetime count of one-time build purchases per plan, from completed
+// checkout sessions (metadata.plan set at checkout). Paginated, capped.
+async function countBuildSales(base, auth) {
+  const builds = { single: 0, standard: 0, professional: 0 };
+  let startingAfter = null;
+  try {
+    for (let page = 0; page < 5; page++) {
+      let url = `${base}/checkout/sessions?limit=100&status=complete`;
+      if (startingAfter) url += `&starting_after=${startingAfter}`;
+      const res = await fetch(url, { headers: auth });
+      if (!res.ok) break;
+      const data = await res.json();
+      const list = data.data || [];
+      for (const s of list) {
+        const p = s.metadata && s.metadata.plan;
+        if (p && builds[p] !== undefined) builds[p]++;
+      }
+      if (!data.has_more || !list.length) break;
+      startingAfter = list[list.length - 1].id;
+    }
+  } catch (e) { /* leave zeros on error */ }
+  return builds;
+}
+
 async function fetchStripeData(env) {
   if (!env.STRIPE_SECRET_KEY) return null;
   const auth = { Authorization: `Bearer ${env.STRIPE_SECRET_KEY}` };
@@ -5,6 +29,7 @@ async function fetchStripeData(env) {
   const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400;
 
   try {
+    const buildsPromise = countBuildSales(base, auth);
     const [sessRes, subsRes, pastDueRes, cancelledRes] = await Promise.all([
       fetch(`${base}/checkout/sessions?limit=20&status=complete&created[gte]=${thirtyDaysAgo}`, { headers: auth }),
       fetch(`${base}/subscriptions?status=active&limit=100`, { headers: auth }),
@@ -51,7 +76,8 @@ async function fetchStripeData(env) {
       cancelled_at: new Date(((s.canceled_at || s.ended_at) || s.created) * 1000).toISOString(),
     }));
 
-    return { mrr_cents: Math.round(mrr_cents), active_subs: activeSubs.length, revenue_30d_cents, recentOrders, failedPayments, recentCancelled };
+    const builds = await buildsPromise;
+    return { mrr_cents: Math.round(mrr_cents), active_subs: activeSubs.length, revenue_30d_cents, recentOrders, failedPayments, recentCancelled, builds };
   } catch (e) {
     return { error: e.message };
   }
