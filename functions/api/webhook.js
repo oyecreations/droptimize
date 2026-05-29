@@ -20,9 +20,9 @@ async function verifyStripeSignature(request, secret) {
 }
 
 const planLabels = {
-  single:                "Single Site, $199",
-  standard:              "Standard, $799",
-  professional:          "Professional, $1,299",
+  single:                "Single Site, $549",
+  standard:              "Standard, $1,599",
+  professional:          "Professional, $2,999",
   "audit-watch-solo":     "Audit Watch Solo (subscription)",
   "audit-watch-business": "Audit Watch Business (subscription)",
   "audit-watch-agency":   "Audit Watch Agency (subscription)",
