@@ -49,22 +49,7 @@ p:last-of-type{margin-bottom:0}
   <hr class="divider">
   <a href="https://droptimize.org" class="back">Back to droptimize.org</a>
 </div>
-<script>
-(function(){
-  var params = new URLSearchParams(window.location.search);
-  var plan = params.get('plan') || '';
-  var labels = {
-    'single': 'Single Site - $549',
-    'standard': 'Standard - $1,599',
-    'professional': 'Professional - $2,999',
-    'audit-watch-solo': 'Audit Watch Solo',
-    'audit-watch-business': 'Audit Watch Business',
-    'audit-watch-agency': 'Audit Watch Agency',
-  };
-  var el = document.getElementById('planLabel');
-  if (labels[plan]) el.textContent = labels[plan];
-})();
-</script>
+<script defer src="/assets/success.js"></script>
 <script defer src="/assets/pwa.js"></script>
 </body>
 </html>
