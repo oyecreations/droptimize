@@ -2,3 +2,6 @@ https://www.droptimize.org/* https://droptimize.org/:splat 301
 
 # Belt-and-suspenders for the local-only _private/ folder (which should never be committed/deployed):
 /_private/* /404 404
+
+# Worker source lives in the repo for versioning but is deployed separately via wrangler, not served as a page:
+/workers/* /404 404

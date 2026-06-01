@@ -5,7 +5,7 @@
    - /api/* and non-GET: never cached (audits and checkout must always be live).
    Bump CACHE_VERSION on any change to this file or the precache list. */
 
-const CACHE_VERSION = "droptimize-v1";
+const CACHE_VERSION = "droptimize-v2";
 const PRECACHE = [
   "/",
   "/manifest.webmanifest",
@@ -93,6 +93,69 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => hit);
       return hit || network;
+    })
+  );
+});
+
+// --- Web Push: Audit Watch alerts ---
+// Pushes are payload-less. On receipt the worker fetches the queued alert
+// detail for its own subscription, then shows the notification. If anything
+// fails it still shows a generic notice (push requires a user-visible result).
+self.addEventListener("push", (event) => {
+  event.waitUntil(
+    (async () => {
+      let alerts = [];
+      try {
+        const sub = await self.registration.pushManager.getSubscription();
+        if (sub) {
+          const res = await fetch("/api/push/pending", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ endpoint: sub.endpoint }),
+          });
+          if (res.ok) alerts = (await res.json()).alerts || [];
+        }
+      } catch (e) {
+        /* fall through to the generic notice */
+      }
+
+      if (!alerts.length) {
+        await self.registration.showNotification("Droptimize", {
+          body: "A site you watch changed. Open Droptimize to see the latest audit.",
+          icon: "/assets/icons/icon-192.png",
+          badge: "/assets/icons/favicon-32.png",
+          data: { url: "/watch/" },
+        });
+        return;
+      }
+
+      await Promise.all(
+        alerts.map((a) =>
+          self.registration.showNotification(a.title || "Droptimize alert", {
+            body: a.body || "",
+            icon: "/assets/icons/icon-192.png",
+            badge: "/assets/icons/favicon-32.png",
+            tag: a.tag || undefined,
+            data: { url: a.url || "/watch/" },
+          })
+        )
+      );
+    })()
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || "/watch/";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((wins) => {
+      for (const w of wins) {
+        if ("focus" in w) {
+          w.navigate(target);
+          return w.focus();
+        }
+      }
+      return clients.openWindow(target);
     })
   );
 });

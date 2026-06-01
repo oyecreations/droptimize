@@ -1,0 +1,22 @@
+name = "droptimize-monitor"
+main = "monitor.js"
+compatibility_date = "2024-09-23"
+
+# Shares the Pages site's KV namespace.
+[[kv_namespaces]]
+binding = "DROPTIMIZE_KV"
+id = "3a65033dab2a4058aff09e354761e3c4"
+
+# Daily at 11:00 UTC. Per-monitor cadence (daily/weekly/monthly) is enforced
+# in code via last-run timestamps, so this just needs to wake once a day.
+[triggers]
+crons = ["0 11 * * *"]
+
+[vars]
+VAPID_SUBJECT = "mailto:alerts@droptimize.org"
+VAPID_PUBLIC_KEY = "BG7DILBw1VbRryeDQJ1Ascct9sf5fjthfkUqxOBkDGbl4f0y675ghoQhuvXtBkYyoazD4oxzu6-JGaA-TIyl37Y"
+
+# Secrets (set via `wrangler secret put`, NOT committed):
+#   PSI_KEY           Google PageSpeed Insights API key
+#   VAPID_PRIVATE_JWK VAPID private key as a JWK JSON string
+#   MANUAL_SECRET     token guarding GET /run?key=... manual trigger

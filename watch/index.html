@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Watch your site | droptimize.org</title>
+<meta name="description" content="Get a push notification the moment your site's SEO, performance, security, accessibility, or best-practices score slips. Pick your site, choose how often we check, and set the score you never want to drop below." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://droptimize.org/watch/" />
+<meta property="og:title" content="Watch your site | droptimize.org" />
+<meta property="og:description" content="Push alerts when your site's audit scores slip. You pick the site, the cadence, and the floor." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://droptimize.org/watch/" />
+<meta property="og:image" content="https://droptimize.org/assets/og/og-optimize.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://droptimize.org/assets/og/og-optimize.png" />
+
+<link rel="preload" href="/assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- PWA: installable app shell -->
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="theme-color" content="#111111" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Droptimize" />
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+
+<style>
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:optional;src:url('/assets/fonts/dm-mono-400.woff2') format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:optional;src:url('/assets/fonts/dm-mono-500.woff2') format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:100 900;font-display:optional;src:url('/assets/fonts/dm-sans.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:700 900;font-display:optional;src:url('/assets/fonts/playfair.woff2') format('woff2')}
+
+:root {
+  --bg:#111111; --surface:#1B1B1B; --surface2:#232323; --border:#2E2E2E;
+  --gold:#C9A84C; --gold-dim:#8A6F2E; --text:#EBEBEB; --muted:#8C8C8C;
+  --warm:#F5F3EE; --coral:#E05A3A; --green:#4CAF7D;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { font-family:"DM Sans",system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased; }
+a { color:var(--gold); text-decoration:none; transition:color 150ms; }
+h1,h2,h3 { transition:color 150ms; line-height:1.2; }
+h1:hover,h2:hover,h3:hover { color:var(--gold); }
+
+.topnav { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(17,17,17,0.92); backdrop-filter:blur(8px); z-index:10; }
+.brand { display:flex; align-items:center; gap:0.5rem; }
+.brand svg { height:30px; width:auto; }
+.brand svg path { transition:fill 150ms; }
+.brand:hover svg polyline { transition:stroke 150ms; }
+.brand-name { font-family:"Playfair Display",serif; font-weight:700; font-size:1.05rem; color:var(--warm); }
+.brand-name span { color:var(--gold); }
+.brand:hover .brand-name { color:var(--gold); }
+.brand:hover .brand-name span { color:var(--warm); }
+.back { font-family:"DM Mono",monospace; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
+.back:hover { color:var(--gold); }
+
+.wrap { max-width:680px; margin:0 auto; padding:2.5rem 1.25rem 4rem; }
+.eyebrow { font-family:"DM Mono",monospace; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem; }
+h1 { font-family:"Playfair Display",serif; font-size:2.2rem; font-weight:800; margin-bottom:0.75rem; }
+h1 .pin { color:var(--gold); }
+.lede { color:var(--muted); font-size:1.05rem; max-width:56ch; margin-bottom:2rem; }
+
+.card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.5rem; transition:border-color 150ms, transform 150ms; }
+.card:hover { border-color:var(--gold-dim); }
+.card + .card { margin-top:1.25rem; }
+
+label.field { display:block; margin-bottom:1.15rem; }
+label.field > .lab { display:block; font-size:0.85rem; font-weight:600; color:var(--warm); margin-bottom:0.4rem; }
+label.field > .hint { display:block; font-size:0.78rem; color:var(--muted); margin-bottom:0.5rem; }
+input[type=url], select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:9px; color:var(--text); font-family:inherit; font-size:0.95rem; padding:0.7rem 0.85rem; transition:border-color 150ms; }
+input[type=url]:focus, select:focus { outline:none; border-color:var(--gold); }
+
+.range-row { display:flex; align-items:center; gap:0.9rem; }
+input[type=range] { flex:1; accent-color:var(--gold); }
+.range-val { font-family:"DM Mono",monospace; font-size:1.1rem; color:var(--gold); min-width:3.2ch; text-align:right; }
+
+.toggle { display:flex; align-items:flex-start; gap:0.6rem; padding:0.65rem 0; cursor:pointer; }
+.toggle input { margin-top:0.25rem; accent-color:var(--gold); width:1.05rem; height:1.05rem; }
+.toggle .t-lab { font-size:0.9rem; }
+.toggle .t-sub { display:block; font-size:0.78rem; color:var(--muted); }
+
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; background:var(--gold); color:#111; border:none; border-radius:10px; font-family:inherit; font-weight:700; font-size:1rem; padding:0.85rem 1.2rem; cursor:pointer; transition:transform 150ms, background 150ms, box-shadow 150ms; }
+.btn:hover { background:#d8b860; transform:translateY(-1px); box-shadow:0 6px 18px rgba(201,168,76,0.2); }
+.btn:disabled { opacity:0.55; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.status { margin-top:1rem; font-size:0.88rem; min-height:1.2em; }
+.status.ok { color:var(--green); }
+.status.err { color:var(--coral); }
+.status.info { color:var(--muted); }
+
+.watching h2 { font-family:"Playfair Display",serif; font-size:1.3rem; margin-bottom:0.85rem; }
+.mon { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; padding:0.85rem 0; border-bottom:1px solid var(--border); }
+.mon:last-child { border-bottom:none; }
+.mon .m-url { font-weight:600; word-break:break-all; }
+.mon .m-meta { font-size:0.78rem; color:var(--muted); font-family:"DM Mono",monospace; }
+.mon .m-del { background:none; border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:0.4rem 0.7rem; font-family:"DM Mono",monospace; font-size:0.72rem; cursor:pointer; transition:border-color 150ms,color 150ms; flex-shrink:0; }
+.mon .m-del:hover { border-color:var(--coral); color:var(--coral); }
+.empty { color:var(--muted); font-size:0.9rem; }
+
+.note { margin-top:1.5rem; padding:0.95rem 1.1rem; background:var(--surface2); border:1px solid var(--border); border-radius:10px; font-size:0.82rem; color:var(--muted); }
+.note strong { color:var(--warm); }
+.hidden { display:none !important; }
+footer { text-align:center; padding:2rem 1rem; color:var(--muted); font-size:0.8rem; border-top:1px solid var(--border); }
+footer .f-brand { font-family:"Playfair Display",serif; color:var(--warm); }
+footer .f-brand span { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="/" class="brand" aria-label="droptimize.org home">
+    <svg viewBox="0 0 48 56" role="img" aria-label="droptimize logo" fill="none">
+      <path d="M6,20 A18,18 0 0,1 42,20 Q42,38 24,54 Q6,38 6,20 Z" fill="#C9A84C"/>
+      <polyline points="13,28 24,14 35,28" stroke="#111111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="brand-name">droptimize<span>.org</span></span>
+  </a>
+  <a href="/" class="back">&larr; Home</a>
+</nav>
+
+<main class="wrap">
+  <p class="eyebrow">Audit Watch</p>
+  <h1>Watch <span class="pin">your</span> site.</h1>
+  <p class="lede">We check your site on the schedule you pick. The moment a score slips below your line, or your site goes dark, your phone buzzes. No dashboard to babysit.</p>
+
+  <!-- Unsupported-browser fallback -->
+  <div id="unsupported" class="card hidden">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.5rem;">Almost there</h2>
+    <p id="unsupportedMsg" class="empty"></p>
+  </div>
+
+  <form id="watchForm" class="card hidden" autocomplete="off">
+    <label class="field">
+      <span class="lab">Your site</span>
+      <span class="hint">The page you want watched, with https://</span>
+      <input type="url" id="siteUrl" name="siteUrl" placeholder="https://yoursite.com" required inputmode="url" />
+    </label>
+
+    <label class="field">
+      <span class="lab">How often we check</span>
+      <select id="frequency" name="frequency">
+        <option value="daily">Every day</option>
+        <option value="weekly" selected>Every week</option>
+        <option value="monthly">Every month</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span class="lab">Never drop below</span>
+      <span class="hint">Buzz me if any of the five scores falls under this number.</span>
+      <div class="range-row">
+        <input type="range" id="minScore" name="minScore" min="50" max="100" step="1" value="90" />
+        <span class="range-val" id="minScoreVal">90</span>
+      </div>
+    </label>
+
+    <label class="toggle">
+      <input type="checkbox" id="alertOnDrop" checked />
+      <span class="t-lab">Also tell me about any drop<span class="t-sub">Even small slips from the last check, before they reach your line.</span></span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="alertOnDown" checked />
+      <span class="t-lab">Tell me if my site goes down<span class="t-sub">When the site stops responding at all.</span></span>
+    </label>
+
+    <button type="submit" class="btn" id="submitBtn">Turn on alerts</button>
+    <p class="status info" id="status"></p>
+  </form>
+
+  <div class="card watching hidden" id="watchingCard">
+    <h2>Sites you are watching</h2>
+    <div id="monitorList"></div>
+  </div>
+
+  <div class="note">
+    <strong>On iPhone:</strong> add Droptimize to your Home Screen first (Share, then Add to Home Screen), open it from there, and then turn on alerts. Apple only allows web push from the installed app.
+  </div>
+</main>
+
+<footer>
+  <span class="f-brand">droptimize<span>.org</span></span> &middot; an OYE Creations property
+</footer>
+
+<script defer src="/assets/pwa.js"></script>
+<script defer src="/assets/watch.js"></script>
+</body>
+</html>
