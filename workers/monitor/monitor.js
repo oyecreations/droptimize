@@ -93,8 +93,29 @@ async function runPsi(url, psiKey) {
     return null;
   }
 }
+// Sensitive-file / information-disclosure probe. A Lighthouse/header audit never
+// requests these unlinked paths, so this catches a class headers alone miss.
+const EXPOSE_PATHS = [
+  "/.git/config", "/.git/HEAD", "/.env", "/wrangler.toml", "/package.json",
+  "/package-lock.json", "/CLAUDE.md", "/.DS_Store", "/_private/", "/.npmrc",
+];
+async function checkExposure(origin) {
+  const found = [];
+  await Promise.all(EXPOSE_PATHS.map(async (p) => {
+    try {
+      const r = await fetch(origin + p, { method: "GET", redirect: "manual", headers: { "User-Agent": UA, "cache-control": "no-cache" } });
+      if (!r.ok) return;
+      const body = (await r.text()).slice(0, 2000);
+      const looksHtml = /<!doctype html|<html/i.test(body.slice(0, 300));
+      const tell = /\[core\]|^ref:\s|namespace_id|pages_build_output|"dependencies"|"scripts"\s*:|-----BEGIN |registry\s*=|_auth\s*=/im.test(body);
+      if ((!looksHtml && body.trim().length > 0) || tell) found.push(p);
+    } catch (e) {}
+  }));
+  return found;
+}
+
 async function checkSiteAndHeaders(url) {
-  // Returns { down, checks, securityScore }.
+  // Returns { down, checks, securityScore, exposed }.
   let down = false;
   let resp = null;
   try {
@@ -110,8 +131,17 @@ async function checkSiteAndHeaders(url) {
     checks[k] = has;
     if (has) pass++;
   }
-  const securityScore = Math.round((pass * 100) / 6);
-  return { down, checks, securityScore };
+  let securityScore = Math.round((pass * 100) / 6);
+  // Information-disclosure check (skipped when the site is down). Each exposed
+  // sensitive file drops the Security score by 15, floored at 0.
+  let exposed = [];
+  if (!down) {
+    try {
+      exposed = await checkExposure(new URL(url).origin);
+      if (exposed.length) securityScore = Math.max(0, securityScore - exposed.length * 15);
+    } catch (e) {}
+  }
+  return { down, checks, securityScore, exposed };
 }
 
 // ---------- diff -> alert lines ----------
@@ -142,6 +172,13 @@ function buildAlertLines(rec, scores, checks, down) {
         lines.push(HEADER_MAP[k].label + " header missing");
       }
     }
+  }
+  // Newly exposed sensitive files (information disclosure).
+  if (Array.isArray(scores.exposed) && scores.exposed.length) {
+    const prevExposed = (rec.lastScores && Array.isArray(rec.lastScores.exposed)) ? rec.lastScores.exposed : [];
+    scores.exposed.forEach(function (p) {
+      if (first || prevExposed.indexOf(p) === -1) lines.push("Exposed file: " + p);
+    });
   }
   return lines;
 }
@@ -182,7 +219,7 @@ async function processAll(env, opts) {
         if (!site.down) {
           const psi = await runPsi(rec.url, env.PSI_KEY);
           if (psi) {
-            scores = { ...psi, security: site.securityScore };
+            scores = { ...psi, security: site.securityScore, exposed: site.exposed || [] };
           }
         }
 
