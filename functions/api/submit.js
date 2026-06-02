@@ -38,6 +38,31 @@ async function checkSecurity(url) {
   return Math.round(checks.filter(Boolean).length * 100 / checks.length);
 }
 
+// Sensitive-file / information-disclosure check. Probes common repo + config
+// paths that should never be public. A Lighthouse/header audit never requests
+// these, so this catches a class headers alone miss.
+async function checkExposure(url) {
+  let origin;
+  try { origin = new URL(url).origin; } catch (e) { return []; }
+  const PATHS = [
+    '/.git/config', '/.git/HEAD', '/.env', '/wrangler.toml', '/package.json',
+    '/package-lock.json', '/CLAUDE.md', '/.DS_Store', '/_private/', '/.npmrc',
+  ];
+  const found = [];
+  await Promise.all(PATHS.map(async (p) => {
+    try {
+      const r = await fetch(origin + p, { method: 'GET', headers: { 'cache-control': 'no-cache' }, redirect: 'manual' });
+      if (!r.ok) return;
+      const body = (await r.text()).slice(0, 2000);
+      const looksHtml = /<!doctype html|<html/i.test(body.slice(0, 300));
+      const tell = /\[core\]|^ref:\s|namespace_id|pages_build_output|"dependencies"|"scripts"\s*:|-----BEGIN |registry\s*=|_auth\s*=/im.test(body);
+      // A real config/secret/source file is either non-HTML with content, or carries a tell-tale token.
+      if ((!looksHtml && body.trim().length > 0) || tell) found.push(p);
+    } catch (e) {}
+  }));
+  return found;
+}
+
 function scoreHex(n) {
   if (n == null) return '#8C8C8C';
   return n >= 90 ? '#C9A84C' : n >= 70 ? '#F59E0B' : '#E05A3A';
@@ -106,7 +131,14 @@ export async function onRequestPost(context) {
       const audit   = Promise.all([
         runPSI(website, env.PSI_KEY).catch(() => null),
         checkSecurity(website).catch(() => null),
-      ]).then(([psi, sec]) => psi ? { ...psi, security: sec } : null);
+        checkExposure(website).catch(() => []),
+      ]).then(([psi, sec, exposed]) => {
+        if (!psi) return null;
+        let security = sec;
+        // Each exposed sensitive file drops the Security score; floor at 0.
+        if (exposed && exposed.length && security != null) security = Math.max(0, security - exposed.length * 15);
+        return { ...psi, security, exposed: exposed || [] };
+      });
 
       scores = await Promise.race([audit, timeout]);
     }
@@ -136,6 +168,7 @@ export async function onRequestPost(context) {
         `  Performance:    ${scores.performance}%`,
         `  Accessibility:  ${scores.accessibility}%`,
         `  Best Practices: ${scores.best_practices}%`,
+        ...(scores.exposed && scores.exposed.length ? ['', `  EXPOSED FILES (${scores.exposed.length}): ${scores.exposed.join(', ')}`] : []),
       ] : ['', '(No URL provided - no scores run)'];
 
       const ownerText = [
