@@ -103,7 +103,7 @@ export async function onRequestGet({ request, env }) {
     const plans = { solo: 0, business: 0, agency: 0 };
     await Promise.all(keys.map(async k => {
       const val = await env.DROPTIMIZE_KV.get(k.name, 'json');
-      if (val && val.plan) { const p = val.plan.replace('audit-watch-', ''); if (plans[p] !== undefined) plans[p]++; }
+      if (val && val.plan) { const p = val.plan.replace('audit-watch-', '').replace('-annual', ''); if (plans[p] !== undefined) plans[p]++; }
     }));
     return new Response(JSON.stringify({
       brand: 'droptimize',

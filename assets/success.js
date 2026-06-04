@@ -9,7 +9,10 @@
     professional: "Professional - $2,999",
     "audit-watch-solo": "Audit Watch Solo",
     "audit-watch-business": "Audit Watch Business",
-    "audit-watch-agency": "Audit Watch Agency"
+    "audit-watch-agency": "Audit Watch Agency",
+    "audit-watch-solo-annual": "Audit Watch Solo (Annual)",
+    "audit-watch-business-annual": "Audit Watch Business (Annual)",
+    "audit-watch-agency-annual": "Audit Watch Agency (Annual)"
   };
   var el = document.getElementById("planLabel");
   if (el && labels[plan]) el.textContent = labels[plan];

@@ -15,6 +15,9 @@ export async function onRequestPost({ request, env }) {
       "audit-watch-solo":     env.PRICE_AUDIT_WATCH_SOLO,
       "audit-watch-business": env.PRICE_AUDIT_WATCH_BUSINESS,
       "audit-watch-agency":   env.PRICE_AUDIT_WATCH_AGENCY,
+      "audit-watch-solo-annual":     env.PRICE_AUDIT_WATCH_SOLO_ANNUAL,
+      "audit-watch-business-annual": env.PRICE_AUDIT_WATCH_BUSINESS_ANNUAL,
+      "audit-watch-agency-annual":   env.PRICE_AUDIT_WATCH_AGENCY_ANNUAL,
     };
 
     const priceId = priceMap[plan];
@@ -22,8 +25,7 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: "invalid plan" }), { status: 400, headers });
     }
 
-    const subscriptionPlans = ["audit-watch-solo", "audit-watch-business", "audit-watch-agency"];
-    const mode = subscriptionPlans.includes(plan) ? "subscription" : "payment";
+    const mode = plan.startsWith("audit-watch-") ? "subscription" : "payment";
 
     const params = new URLSearchParams();
     params.set("mode", mode);

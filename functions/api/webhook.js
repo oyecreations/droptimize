@@ -26,6 +26,9 @@ const planLabels = {
   "audit-watch-solo":     "Audit Watch Solo (subscription)",
   "audit-watch-business": "Audit Watch Business (subscription)",
   "audit-watch-agency":   "Audit Watch Agency (subscription)",
+  "audit-watch-solo-annual":     "Audit Watch Solo (annual subscription)",
+  "audit-watch-business-annual": "Audit Watch Business (annual subscription)",
+  "audit-watch-agency-annual":   "Audit Watch Agency (annual subscription)",
 };
 
 export async function onRequestPost({ request, env }) {

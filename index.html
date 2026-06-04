@@ -1223,16 +1223,21 @@
     </div>
 
     <div style="margin-top:64px;">
-      <p class="eyebrow">Audit Watch, Monthly Monitoring</p>
+      <p class="eyebrow">Audit Watch, Ongoing Monitoring</p>
       <h2 class="section-title">Keep the scores you paid for. <span style="color:var(--gold);">Automatically.</span></h2>
       <p class="section-sub">A clean launch is step one. Audit Watch re-runs the full 5-category audit every week and alerts you the moment a score slips. It watches and tells you what dropped. Fixes are a separate quote or roll into a build.</p>
 
-      <div class="pricing-grid">
+      <div class="aw-billing-toggle" role="group" aria-label="Billing period" style="display:inline-flex;gap:4px;padding:5px;margin:8px 0 28px;border:1px solid var(--border);border-radius:999px;">
+        <button type="button" class="aw-bill-opt" data-bill="monthly">Monthly</button>
+        <button type="button" class="aw-bill-opt" data-bill="annual">Annual &middot; 2 months free</button>
+      </div>
+
+      <div class="pricing-grid" id="audit-watch-grid">
 
         <div class="pricing-card">
           <div class="pricing-tier">Audit Watch Solo</div>
-          <div class="pricing-price">$29</div>
-          <div class="pricing-price-note">per month, 1 site</div>
+          <div class="pricing-price" data-monthly="$29" data-annual="$290">$29</div>
+          <div class="pricing-price-note" data-monthly-note="per month, 1 site" data-annual-note="per year, 1 site">per month, 1 site</div>
           <div class="pricing-donation">10% to charity of your choice</div>
           <ul class="pricing-list">
             <li>Weekly audit across all 5 categories</li>
@@ -1240,13 +1245,13 @@
             <li>Monthly trend report</li>
             <li>Cancel anytime, no lock-in</li>
           </ul>
-          <a href="#" class="pricing-cta pricing-cta--ghost checkout-btn" data-plan="audit-watch-solo">Get Started</a>
+          <a href="#" class="pricing-cta pricing-cta--ghost checkout-btn" data-plan="audit-watch-solo" data-plan-monthly="audit-watch-solo" data-plan-annual="audit-watch-solo-annual">Get Started</a>
         </div>
 
         <div class="pricing-card pricing-card--featured">
           <div class="pricing-tier">Audit Watch Business</div>
-          <div class="pricing-price">$79</div>
-          <div class="pricing-price-note">per month, up to 5 sites</div>
+          <div class="pricing-price" data-monthly="$79" data-annual="$790">$79</div>
+          <div class="pricing-price-note" data-monthly-note="per month, up to 5 sites" data-annual-note="per year, up to 5 sites">per month, up to 5 sites</div>
           <div class="pricing-donation">10% to charity of your choice</div>
           <ul class="pricing-list">
             <li>Everything in Solo</li>
@@ -1255,13 +1260,13 @@
             <li>Priority drop alerts</li>
             <li>Cancel anytime, no lock-in</li>
           </ul>
-          <a href="#" class="pricing-cta checkout-btn" data-plan="audit-watch-business">Get Started</a>
+          <a href="#" class="pricing-cta checkout-btn" data-plan="audit-watch-business" data-plan-monthly="audit-watch-business" data-plan-annual="audit-watch-business-annual">Get Started</a>
         </div>
 
         <div class="pricing-card">
           <div class="pricing-tier">Audit Watch Agency</div>
-          <div class="pricing-price">$199</div>
-          <div class="pricing-price-note">per month, up to 25 sites</div>
+          <div class="pricing-price" data-monthly="$199" data-annual="$1,990">$199</div>
+          <div class="pricing-price-note" data-monthly-note="per month, up to 25 sites" data-annual-note="per year, up to 25 sites">per month, up to 25 sites</div>
           <div class="pricing-donation">10% to charity of your choice</div>
           <ul class="pricing-list">
             <li>Everything in Business</li>
@@ -1270,13 +1275,13 @@
             <li>Bulk score export</li>
             <li>Cancel anytime, no lock-in</li>
           </ul>
-          <a href="#" class="pricing-cta pricing-cta--ghost checkout-btn" data-plan="audit-watch-agency">Get Started</a>
+          <a href="#" class="pricing-cta pricing-cta--ghost checkout-btn" data-plan="audit-watch-agency" data-plan-monthly="audit-watch-agency" data-plan-annual="audit-watch-agency-annual">Get Started</a>
         </div>
 
       </div>
 
       <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:12px;">Monitoring only. Audit Watch flags what slipped, it does not fix it. Need the fix? We quote it or fold it into a build.</p>
-      <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px;">Annual billing available, 2 months free. Just ask.</p>
+      <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px;">Switch to annual above and get 2 months free. Cancel anytime, no lock-in.</p>
     </div>
 
     <div class="give-back-banner">
@@ -1364,7 +1369,7 @@
 
 <script defer src="/assets/nav.js"></script>
 <script defer src="/assets/optimize.js?v=14"></script>
-<script defer src="/assets/checkout.js"></script>
+<script defer src="/assets/checkout.js?v=2"></script>
 <script defer src="/assets/chat-config.js"></script>
 <script defer src="https://bink.oyecreations.com/assets/oye-bar.js?v=1"></script>
 <script defer src="https://bink.oyecreations.com/assets/chat-widget.js?v=28"></script>
