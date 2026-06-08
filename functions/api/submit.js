@@ -193,7 +193,7 @@ export async function onRequestPost(context) {
           body: JSON.stringify({
             from:    'droptimize.org <forms@droptimize.org>',
             to:      ['oyecreations@proton.me'],
-            subject: scores ? `Audit request + scores - ${website}` : `Audit request - ${name}`,
+            subject: scores ? `Droptimize - Audit request + scores - ${website}` : `Droptimize - Audit request - ${name}`,
             text:    ownerText,
           }),
         }),
