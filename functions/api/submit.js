@@ -192,7 +192,7 @@ export async function onRequestPost(context) {
           headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             from:    'droptimize.org <forms@droptimize.org>',
-            to:      ['lessthanblake@proton.me'],
+            to:      ['oyecreations@proton.me'],
             subject: scores ? `Audit request + scores - ${website}` : `Audit request - ${name}`,
             text:    ownerText,
           }),
