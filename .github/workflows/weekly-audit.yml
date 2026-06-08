@@ -147,24 +147,10 @@ jobs:
             -H "X-Audit-Secret: $BINK_AUDIT_SECRET" \
             -d "$AUDIT_JSON"
 
-      - name: Alert on Score Drop
-        if: steps.psi_mobile.outputs.psi_failed == 'false'
-        run: |
-          SEO=${{ steps.psi_mobile.outputs.seo }}
-          PERF=${{ steps.psi_mobile.outputs.performance }}
-          BP=${{ steps.psi_mobile.outputs.best_practices }}
-          ACC=${{ steps.psi_mobile.outputs.accessibility }}
-          SEC=${{ steps.headers.outputs.security_score }}
-          FAILED=0
-          REPORT=""
-          [ "$SEO" -lt 100 ] && REPORT="$REPORT SEO=${SEO}%" && FAILED=1
-          [ "$PERF" -lt 100 ] && REPORT="$REPORT Performance=${PERF}%" && FAILED=1
-          [ "$BP" -lt 100 ] && REPORT="$REPORT BestPractices=${BP}%" && FAILED=1
-          [ "$ACC" -lt 100 ] && REPORT="$REPORT Accessibility=${ACC}%" && FAILED=1
-          [ "$SEC" -lt 100 ] && REPORT="$REPORT Security=${SEC}%" && FAILED=1
-          if [ "$FAILED" = "1" ]; then
-            echo "::warning::${{ matrix.site.domain }} score below 100% -$REPORT"
-          fi
+      # Score-drop alerting moved to the Watchtower poller (bink /api/alerts/check):
+      # Telegram on the transition under a 70 floor, with recovery + a Settings
+      # toggle. The old per-run `::warning:: below 100%` GH annotation was pure
+      # noise on top of the Print Summary table, so it was removed.
 
       - name: Print Summary
         if: always()
