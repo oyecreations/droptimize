@@ -191,7 +191,7 @@ export async function onRequestPost(context) {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            from:    'droptimize.org <forms@droptimize.org>',
+            from:    'Droptimize <forms@mail.oyecreations.com>',
             to:      ['oyecreations@proton.me'],
             subject: scores ? `Droptimize - Audit request + scores - ${website}` : `Droptimize - Audit request - ${name}`,
             text:    ownerText,
@@ -205,8 +205,9 @@ export async function onRequestPost(context) {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              from:    'droptimize.org <hello@droptimize.org>',
+              from:    'Droptimize <hello@mail.oyecreations.com>',
               to:      [email],
+              reply_to: 'oyecreations@proton.me',
               subject: `Your audit results - ${website}`,
               html:    buildCustomerEmail(name, website, scores),
             }),
