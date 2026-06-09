@@ -107,7 +107,7 @@ export async function onRequestGet({ request, env }) {
     }));
     return new Response(JSON.stringify({
       brand: 'droptimize',
-      submissions: { total: subs.length, unread, last7Days: last7, latest: subs[0] || null },
+      submissions: { total: subs.length, unread, last7Days: last7, latest: subs[0] || null, list: subs.slice(0, 50) },
       auditWatch: { totalSubscribers: keys.length, plans },
       latestSeoAudit: latestAudit ? { week: latestAudit.week, scores: latestAudit.scores || {} } : null,
       stripe,
