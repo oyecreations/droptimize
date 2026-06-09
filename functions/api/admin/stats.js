@@ -89,11 +89,18 @@ export async function onRequestGet({ request, env }) {
     return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
   try {
+    // Stripe pagination can be slow; never let it hold the KV-backed data
+    // (submissions, audit, audit-watch) hostage. Cap it and return partial
+    // so the dashboard's aggregate fetch never times out on this brand.
+    const stripeGuarded = Promise.race([
+      fetchStripeData(env),
+      new Promise(resolve => setTimeout(() => resolve({ error: 'stripe timeout' }), 3500)),
+    ]);
     const [submissions, latestAudit, awKeys, stripe] = await Promise.all([
       env.DROPTIMIZE_KV.get('submissions', 'json'),
       env.DROPTIMIZE_KV.get('audit:latest', 'json'),
       env.DROPTIMIZE_KV.list({ prefix: 'auditwatch:' }),
-      fetchStripeData(env),
+      stripeGuarded,
     ]);
     const subs = submissions || [];
     const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
