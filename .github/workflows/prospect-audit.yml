@@ -180,7 +180,7 @@ jobs:
               },
               'aggregation': {
                   'method': os.environ.get('AGG', ''),
-                  'psi_runs': int(os.environ.get('RUNS_OK') or 0),
+                  'psi_runs': int((os.environ.get('RUNS_OK') or '').strip() or 0),
                   'note': 'Lighthouse scores are aggregated across 5 PSI runs to remove single-run lab noise.',
               },
               'security_headers': {
