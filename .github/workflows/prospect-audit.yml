@@ -67,10 +67,18 @@ jobs:
           agg = {k: pick([r[1][k] for r in runs]) for k in cats}
           # Keep a representative single run (closest performance to the aggregate)
           # so the failing-audit detail below reflects a real run, not a blend.
-          rep = runs[0][0] if runs else 'psi_1.json'
+          rep = None
           if runs:
               rep = min(runs, key=lambda r: abs(r[1]['performance'] - agg['performance']))[0]
-          shutil.copy(rep, 'psi_mobile.json')
+          else:
+              avail = sorted(glob.glob('psi_*.json'))
+              rep = avail[0] if avail else None
+          # Never crash if no usable PSI file exists (unmeasurable site): write an
+          # empty doc so the report step still runs and emits a 0-scored result.
+          if rep and os.path.exists(rep):
+              shutil.copy(rep, 'psi_mobile.json')
+          else:
+              open('psi_mobile.json', 'w').write('{}')
           print(f"seo={agg['seo']}")
           print(f"performance={agg['performance']}")
           print(f"best_practices={agg['best-practices']}")
@@ -144,7 +152,16 @@ jobs:
         run: |
           python3 <<'PY' > report.json
           import json, os, datetime
-          data = json.load(open('psi_mobile.json'))
+          # Safe int cast: an unmeasurable site can leave a step output blank, and a
+          # bare int('') would crash the whole report. Default missing/blank to 0.
+          def _i(k, d=0):
+              v = (os.environ.get(k) or '').strip()
+              try: return int(v)
+              except ValueError: return d
+          try:
+              data = json.load(open('psi_mobile.json'))
+          except Exception:
+              data = {}
           cats = data.get('lighthouseResult', {}).get('categories', {})
           audits = data.get('lighthouseResult', {}).get('audits', {})
 
@@ -172,24 +189,24 @@ jobs:
               'url': os.environ['URL'],
               'timestamp': datetime.datetime.utcnow().isoformat() + 'Z',
               'scores': {
-                  'seo': int(os.environ['SEO']),
-                  'performance': int(os.environ['PERF']),
-                  'best_practices': int(os.environ['BP']),
-                  'accessibility': int(os.environ['ACC']),
-                  'security': int(os.environ['SEC']),
+                  'seo': _i('SEO'),
+                  'performance': _i('PERF'),
+                  'best_practices': _i('BP'),
+                  'accessibility': _i('ACC'),
+                  'security': _i('SEC'),
               },
               'aggregation': {
                   'method': os.environ.get('AGG', ''),
-                  'psi_runs': int((os.environ.get('RUNS_OK') or '').strip() or 0),
+                  'psi_runs': _i('RUNS_OK'),
                   'note': 'Lighthouse scores are aggregated across 5 PSI runs to remove single-run lab noise.',
               },
               'security_headers': {
-                  'hsts': int(os.environ['HSTS']) > 0,
-                  'csp': int(os.environ['CSP']) > 0,
-                  'x_content_type_options': int(os.environ['XCTO']) > 0,
-                  'x_frame_options': int(os.environ['XFO']) > 0,
-                  'referrer_policy': int(os.environ['RP']) > 0,
-                  'permissions_policy': int(os.environ['PP']) > 0,
+                  'hsts': _i('HSTS') > 0,
+                  'csp': _i('CSP') > 0,
+                  'x_content_type_options': _i('XCTO') > 0,
+                  'x_frame_options': _i('XFO') > 0,
+                  'referrer_policy': _i('RP') > 0,
+                  'permissions_policy': _i('PP') > 0,
               },
               'seo_checks': {
                   'sitemap_xml': os.environ['SITEMAP'],
