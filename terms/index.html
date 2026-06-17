@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Droptimize terms of service: what our website audits, rebuilds, and Audit Watch monitoring do, your responsibilities, payments and refunds, and the rules for using the service." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://droptimize.org/terms/" />
+
+<meta property="og:title" content="Terms of Service | droptimize.org" />
+<meta property="og:description" content="The rules for using Droptimize: audits, rebuilds, Audit Watch monitoring, payments, ownership, and your rights." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://droptimize.org/terms/" />
+<meta property="og:image" content="https://droptimize.org/assets/og/og-optimize-v2.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Terms of Service | droptimize.org" />
+<meta name="twitter:image" content="https://droptimize.org/assets/og/og-optimize-v2.png" />
+
+<title>Terms of Service | droptimize.org</title>
+
+<link rel="preload" href="/assets/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:optional;src:url('/assets/fonts/dm-mono-400.woff2') format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:optional;src:url('/assets/fonts/dm-mono-500.woff2') format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:100 900;font-display:optional;src:url('/assets/fonts/dm-sans.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:700 900;font-display:optional;src:url('/assets/fonts/playfair.woff2') format('woff2')}
+
+  :root {
+    --bg:       #111111;
+    --surface:  #1B1B1B;
+    --surface2: #232323;
+    --border:   #2E2E2E;
+    --gold:     #C9A84C;
+    --gold-dim: #8A6F2E;
+    --text:     #EBEBEB;
+    --muted:    #8C8C8C;
+    --warm:     #F5F3EE;
+    --coral:    #E05A3A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-top: 36px;
+  }
+  a { color: var(--gold); transition: color 150ms; }
+  a:hover { color: var(--warm); }
+  h1, h2, h3 { transition: color 150ms; }
+  h1:hover, h2:hover, h3:hover { color: var(--gold) !important; }
+
+  /* ── OYE BAR ─────────────────────────────────────────────── */
+  .oye-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 102;
+    height: 36px;
+    background: #090806;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+  }
+  .oye-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-decoration: none;
+    color: rgba(255,255,255,0.82);
+    font-family: "Playfair Display", serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: color 150ms;
+  }
+  .oye-brand em { font-style: normal; color: #C9A84C; transition: color 150ms; }
+  .oye-brand svg ellipse, .oye-brand svg circle, .oye-brand svg line { stroke: rgba(255,255,255,0.65); transition: stroke 150ms; }
+  .oye-brand:hover { color: #C9A84C; }
+  .oye-brand:hover em { color: rgba(255,255,255,0.82); }
+  .oye-brand:hover svg ellipse, .oye-brand:hover svg circle, .oye-brand:hover svg line { stroke: #C9A84C; }
+  .oye-net-links {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .oye-net-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: "DM Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: color 0.15s;
+    white-space: nowrap;
+  }
+  .oye-net-link svg { opacity: 0.65; transition: opacity 0.15s; flex-shrink: 0; }
+  .oye-net-link:hover { color: #C9A84C; }
+  .oye-net-link:hover svg { opacity: 1; }
+  @media (max-width: 700px) { .oye-net-links { display: none; } }
+
+  /* ── NAV ─────────────────────────────────────────────────── */
+  nav {
+    position: sticky;
+    top: 36px;
+    z-index: 100;
+    background: rgba(17,17,17,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .nav-logo { height: 32px; width: auto; }
+  .nav-logo path { transition: fill 150ms; }
+  .nav-name { font-family: "Playfair Display", serif; font-size: 18px; font-weight: 700; color: var(--text); transition: color 150ms; }
+  .nav-name span { color: var(--gold); transition: color 150ms; }
+  .nav-brand:hover .nav-name { color: var(--gold); }
+  .nav-brand:hover .nav-name span { color: var(--text); }
+  .nav-back { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .nav-back:hover { color: var(--gold); }
+
+  /* ── CONTENT ─────────────────────────────────────────────── */
+  .wrap { max-width: 780px; margin: 0 auto; padding: 56px 24px 80px; }
+  .doc-badge {
+    display: inline-block;
+    font-family: "DM Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.10);
+    border: 1px solid rgba(201,168,76,0.30);
+    border-radius: 999px;
+    padding: 5px 12px;
+    margin-bottom: 18px;
+  }
+  h1 { font-family: "Playfair Display", serif; font-weight: 900; font-size: clamp(34px,6vw,46px); line-height: 1.1; margin-bottom: 10px; color: var(--warm); }
+  .updated { color: var(--muted); font-size: 14px; margin-bottom: 8px; font-family: "DM Mono", monospace; }
+  .lead {
+    font-size: 18px;
+    color: var(--text);
+    margin: 18px 0 8px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 12px;
+  }
+  h2 { font-family: "Playfair Display", serif; font-weight: 800; font-size: 24px; margin: 40px 0 12px; color: var(--warm); }
+  h3 { font-size: 17px; font-weight: 800; margin: 22px 0 6px; color: var(--gold); }
+  p { margin: 10px 0; color: var(--text); }
+  ul { margin: 10px 0 10px 22px; color: var(--text); }
+  li { margin: 7px 0; }
+  strong { color: var(--warm); }
+  .tbl { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .tbl th, .tbl td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tbl th { background: var(--surface2); font-weight: 800; color: var(--warm); }
+  .tbl tr:last-child td { border-bottom: none; }
+
+  /* ── FOOTER ──────────────────────────────────────────────── */
+  footer { background: var(--bg); border-top: 1px solid var(--border); padding: 48px 24px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  footer .f-brand { font-family: "Playfair Display", Georgia, serif; font-size: 18px; font-weight: 700; color: var(--warm); }
+  footer .f-brand span { color: var(--gold); }
+  footer .f-domains { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.1em; color: var(--muted); }
+  footer .f-copy { font-size: 12px; color: var(--muted); }
+  footer .f-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  footer .f-links a { font-family: "DM Mono", monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; padding: 8px 4px; }
+  footer .f-links a:hover { color: var(--gold); }
+  @media (max-width: 700px) {
+    footer .inner { flex-direction: column; align-items: flex-start; }
+    footer .f-links { flex-direction: column; gap: 0; }
+    footer .f-links a { min-height: 44px; padding: 0 4px; font-size: 14px; }
+  }
+</style>
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="theme-color" content="#111111" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Droptimize" />
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+</head>
+<body>
+
+<!-- ── OYE BAR ──────────────────────────────────────────── -->
+<div class="oye-bar">
+  <a href="https://oyecreations.com" target="_blank" rel="noopener noreferrer" class="oye-brand" aria-label="OYE Creations">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 350" style="height:18px;width:auto" aria-hidden="true">
+      <ellipse cx="250" cy="175" rx="205" ry="135" fill="none" stroke="#C9A84C" stroke-width="13" stroke-linecap="round"/>
+      <defs><clipPath id="oyecp-dt"><ellipse cx="250" cy="175" rx="191" ry="121"/></clipPath></defs>
+      <g clip-path="url(#oyecp-dt)" stroke="#C9A84C" stroke-width="13" stroke-linecap="round" fill="none">
+        <circle cx="148" cy="175" r="63"/>
+        <line x1="175" y1="80" x2="250" y2="168"/><line x1="320" y1="80" x2="250" y2="168"/>
+        <line x1="250" y1="168" x2="250" y2="265"/>
+        <line x1="318" y1="112" x2="318" y2="240"/><line x1="318" y1="112" x2="388" y2="112"/>
+        <line x1="318" y1="176" x2="383" y2="176"/><line x1="318" y1="240" x2="393" y2="240"/>
+      </g>
+    </svg>
+    <span>OYE <em>Creations</em></span>
+  </a>
+  <div class="oye-net-links" role="navigation" aria-label="OYE network">
+    <a href="https://multilingo.studio" target="_blank" rel="noopener noreferrer" class="oye-net-link">
+      <svg viewBox="0 0 28 20" fill="none" style="height:11px;width:auto" aria-hidden="true"><line x1="2" y1="5" x2="20" y2="5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="15" x2="26" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span>Multilingo</span>
+    </a>
+    <a href="https://guitaranon.com" target="_blank" rel="noopener noreferrer" class="oye-net-link">
+      <svg viewBox="0 0 26 32" fill="none" style="height:13px;width:auto" aria-hidden="true"><path d="M13,2 C7,2 3,7 3,13 C3,20 13,30 13,30 C13,30 23,20 23,13 C23,7 19,2 13,2 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>
+      <span>GuitarAnon</span>
+    </a>
+    <a href="https://buzzresume.com" target="_blank" rel="noopener noreferrer" class="oye-net-link">
+      <svg viewBox="0 0 24 28" fill="none" style="height:13px;width:auto" aria-hidden="true"><rect x="2" y="2" width="20" height="24" rx="2" stroke="currentColor" stroke-width="2.5"/><line x1="6" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="15" x2="18" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="13" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>ResumeBuzz</span>
+    </a>
+    <a href="https://pupgrade.app" target="_blank" rel="noopener noreferrer" class="oye-net-link">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="height:13px;width:auto" aria-hidden="true"><ellipse cx="12" cy="17" rx="6" ry="4.5"/><ellipse cx="5" cy="11" rx="2" ry="2.6"/><ellipse cx="9" cy="6" rx="2" ry="2.8"/><ellipse cx="15" cy="6" rx="2" ry="2.8"/><ellipse cx="19" cy="11" rx="2" ry="2.6"/></svg>
+      <span>Pupgrade</span>
+    </a>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg class="nav-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 56" width="48" height="56" role="img" aria-label="droptimize.org logo" fill="none">
+        <path d="M6,20 A18,18 0 0,1 42,20 Q42,38 24,54 Q6,38 6,20 Z" fill="#C9A84C"/>
+        <polyline points="13,28 24,14 35,28" stroke="#111111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="nav-name">droptimize<span>.org</span></span>
+    </a>
+    <a href="/" class="nav-back">&larr; Back to home</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <span class="doc-badge">Terms of Service</span>
+  <h1>The deal, in plain words.</h1>
+  <p class="updated">Last updated: June 17, 2026</p>
+  <p class="lead">Droptimize audits, rebuilds, and watches over websites. No fluff, no lock-in. These terms explain what the service does, what you can expect from us, and what we expect from you. Use Droptimize and you agree to them.</p>
+
+  <h2>1. Who we are</h2>
+  <p>Droptimize is a product of OYE Creations LLC ("we", "us", "Droptimize"). These terms govern your use of droptimize.org and the Droptimize audit, rebuild, and Audit Watch monitoring services (the "Service"). If anything here is unclear, reach us through the chat bubble on any Droptimize page before you rely on it.</p>
+
+  <h2>2. What the Service does</h2>
+  <p>Droptimize runs automated <strong>audits</strong> of a website (performance, SEO, accessibility, best practices, and security), delivers optional <strong>rebuilds</strong> on a fixed-scope project basis, and offers <strong>Audit Watch</strong>, a subscription that periodically re-fetches and re-analyzes a site you ask us to watch and alerts you when scores, headers, or uptime change.</p>
+  <p>Scores, grades, and findings are <strong>diagnostic</strong>. They reflect what automated tooling measured at a point in time. They are not a guarantee of search ranking, traffic, conversions, revenue, or any other business outcome. The Service is a measurement and improvement tool, not a promise of results.</p>
+
+  <h2>3. Eligibility</h2>
+  <p>You must be at least 18 years old and using the Service for business or professional purposes. By using Droptimize you confirm you meet these requirements and that you have the authority to agree to these terms on behalf of any business you represent.</p>
+
+  <h2>4. Your account</h2>
+  <p>Some features require an account or a verified email. You are responsible for the accuracy of the information you give us and for keeping your access secure. You are responsible for activity that happens under your account. Tell us promptly if you believe it has been accessed without your permission.</p>
+
+  <h2>5. Acceptable use</h2>
+  <p>Only submit, audit, rebuild, or monitor websites that <strong>you own or are clearly authorized to act on</strong>. This is important: running audits or monitoring against a site you do not control can violate that site's terms or the law, and you, not us, are responsible for having the right to do so. In addition, don't:</p>
+  <ul>
+    <li>Break the law or infringe anyone's rights.</li>
+    <li>Submit a site you have no authorization to test, scan, or monitor.</li>
+    <li>Attempt to disrupt, overload, reverse-engineer, or gain unauthorized access to the Service or its infrastructure.</li>
+    <li>Resell, scrape, or bulk-extract the Service, its reports, or its output without our written permission.</li>
+  </ul>
+  <p>We may suspend or close accounts that abuse the Service or these terms.</p>
+
+  <h2>6. Deliverables and ownership</h2>
+  <p><strong>What we deliver to you is yours.</strong> When we rebuild your site, the delivered site files and the audit report we hand you belong to you, with no lock-in. You can host them wherever you like and take them with you.</p>
+  <p><strong>Our platform is ours.</strong> The Droptimize software, audit engine, Audit Watch monitoring system, dashboards, design, branding, and underlying tooling are owned by OYE Creations LLC and are not transferred to you. You may use the reports and delivered work, but not copy or resell our platform or tooling.</p>
+
+  <h2>7. Payments, pricing, and refunds</h2>
+  <p>Payments are processed by <strong>Stripe</strong>. We never see or store your full card number. Prices are shown at checkout.</p>
+  <ul>
+    <li><strong>Build tiers</strong> (audit and rebuild projects) are custom work quoted and paid up front. Because each project is built specifically for your site, fees are generally non-refundable once work has begun. If we have not started work, contact us and we will sort out a fair refund.</li>
+    <li><strong>Audit Watch subscriptions</strong> renew automatically (monthly or annually) until you cancel. You can cancel anytime, and your monitoring continues through the end of the period you already paid for. Subscription fees for elapsed periods are non-refundable.</li>
+    <li>Audit Watch monitors and alerts; it does not include fixes. Repairs or rebuilds are separate, quoted work.</li>
+    <li>We may change prices going forward; changes never apply retroactively to a period you have already paid for.</li>
+  </ul>
+
+  <h2>8. No guarantee of results</h2>
+  <p>We do not promise any specific score, ranking, PageSpeed result, traffic level, or revenue. Audit scores depend on factors outside our control, including third-party scripts, hosting, content, and the measurement tools themselves, which can change at any time. The Service is provided "as is" and "as available," without warranties of any kind, to the fullest extent the law allows.</p>
+
+  <h2>9. Limitation of liability</h2>
+  <p>To the fullest extent permitted by law, OYE Creations LLC is not liable for indirect, incidental, or consequential damages arising from your use of the Service, including lost traffic, lost revenue, lost rankings, or downtime. Where liability cannot be excluded, it is limited to the amount you paid us for the Service in the 12 months before the claim.</p>
+
+  <h2>10. Suspension and termination</h2>
+  <p>You can stop using Droptimize and cancel any subscription at any time. We may suspend or end your access if you violate these terms or use the Service in a way that creates risk for us or others. Sections that by their nature should survive (ownership, disclaimers, liability) survive termination.</p>
+
+  <h2>11. Changes to these terms</h2>
+  <p>We may update these terms as the Service evolves. If we make a meaningful change, we will update the date at the top and, where appropriate, notify account holders. Continued use after a change means you accept the updated terms.</p>
+
+  <h2>12. Governing law</h2>
+  <p>These terms are governed by the laws of the State of New Mexico, USA, without regard to its conflict-of-laws rules. Any dispute will be handled in the courts located in New Mexico, unless applicable law gives you the right to bring it elsewhere.</p>
+
+  <h2>13. Contact</h2>
+  <p>Questions about these terms? Reach us through the chat bubble on droptimize.org and we will get back to you.</p>
+</main>
+
+<footer>
+  <div class="inner">
+    <div>
+      <div class="f-brand">droptimize<span>.org</span></div>
+      <div class="f-domains" style="margin-top:6px;">droptimize.org &nbsp;&middot;&nbsp; by <a href="https://oyecreations.com" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;">OYE Creations</a></div>
+    </div>
+    <div class="f-links">
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+    <div>
+      <div class="f-copy">&copy; 2026 OYE Creations LLC. All rights reserved.</div>
+      <div class="f-copy" style="margin-top:4px;">10% of every project donated to 501(c)(3) charities.</div>
+    </div>
+  </div>
+</footer>
+
+<script defer src="https://bink.oyecreations.com/assets/oye-bar.js?v=1"></script>
+<script defer src="/assets/chat-config.js"></script>
+<script defer src="https://bink.oyecreations.com/assets/chat-widget.js?v=28"></script>
+<script defer src="/assets/pwa.js"></script>
+</body>
+</html>
