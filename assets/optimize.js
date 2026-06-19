@@ -94,6 +94,7 @@
     var shown = 0;
 
     if (!hiddenRows.length) { document.getElementById('pt-more-wrap').style.display = 'none'; }
+    else { moreBtn.textContent = 'Show ' + hiddenRows.length + ' more'; }
 
     moreBtn.addEventListener('click', function() {
       var allShown = !hiddenRows.some(function(r) { return r.classList.contains('pt-row--hidden'); });
