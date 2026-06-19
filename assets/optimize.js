@@ -245,4 +245,15 @@
         });
     });
   });
+
+  // Sticky mobile CTA: hide it while the hero's own CTA is on screen so the
+  // first view isn't two stacked gold buttons; reveal once the hero scrolls away.
+  var stickyCta = document.querySelector('.mobile-cta');
+  var heroCtaRow = document.querySelector('.hero .cta-row');
+  if (stickyCta && heroCtaRow && 'IntersectionObserver' in window) {
+    stickyCta.classList.add('is-hidden');
+    new IntersectionObserver(function(entries) {
+      stickyCta.classList.toggle('is-hidden', entries[0].isIntersecting);
+    }, { rootMargin: '0px 0px -40px 0px' }).observe(heroCtaRow);
+  }
 })();

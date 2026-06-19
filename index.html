@@ -69,7 +69,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.25rem;
+    padding: 0 1.5rem;
   }
   .oye-brand {
     display: flex;
@@ -539,10 +539,11 @@
 
   @media (max-width: 560px) {
     .pt-row-sep, .pt-row-date { display: none; }
-    .pt-row-head { flex-wrap: wrap; min-height: auto; padding: 4px 0; }
-    .pt-row-domain { max-width: 55%; overflow: hidden; text-overflow: ellipsis; }
-    .pt-row-biz { flex: 1 1 auto; min-width: 0; }
-    .pt-row-final { flex-basis: 100%; gap: 6px; padding: 2px 0 5px 28px; }
+    .pt-row-head { flex-wrap: wrap; min-height: auto; padding: 6px 14px 8px 0; }
+    .pt-row-domain { flex: 0 0 auto; max-width: none; }
+    /* biz name drops to its own full-width line so it never jams against the edge */
+    .pt-row-biz { flex-basis: 100%; min-width: 0; white-space: normal; padding: 1px 0 0 28px; }
+    .pt-row-final { flex-basis: 100%; flex-wrap: wrap; gap: 5px 10px; padding: 4px 0 4px 28px; }
     .pt-fc { font-size: 10px; }
     .pt-fc-lbl { font-size: 8px; }
     .pt-detail { padding: 10px 10px 12px 10px; }
@@ -581,8 +582,10 @@
   .mobile-cta { display: none; }
   @media (max-width: 860px) {
     .nav-cta { display: none; }
-    .mobile-cta { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; align-items: center; justify-content: center; background: var(--gold); color: #111; font-family: "DM Mono", monospace; font-weight: 700; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; padding: 15px; text-decoration: none; box-shadow: 0 -4px 20px rgba(0,0,0,0.45); }
-    body { padding-bottom: 58px; }
+    .mobile-cta { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; align-items: center; justify-content: center; background: var(--gold); color: #111; font-family: "DM Mono", monospace; font-weight: 700; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; padding: 14px 15px calc(14px + env(safe-area-inset-bottom)); text-decoration: none; box-shadow: 0 -4px 20px rgba(0,0,0,0.45); transition: transform 280ms ease, opacity 280ms ease; }
+    /* Hidden while the hero (which carries its own CTA) is on screen, so the first view isn't two stacked gold buttons. JS toggles this; no-JS users always see the bar. */
+    .mobile-cta.is-hidden { transform: translateY(110%); opacity: 0; pointer-events: none; }
+    body { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
   }
   @media (max-width: 640px) {
     .guarantee-band { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -1369,7 +1372,7 @@
 </footer>
 
 <script defer src="/assets/nav.js"></script>
-<script defer src="/assets/optimize.js?v=14"></script>
+<script defer src="/assets/optimize.js?v=15"></script>
 <script defer src="/assets/checkout.js?v=2"></script>
 <script defer src="/assets/chat-config.js"></script>
 <script defer src="https://bink.oyecreations.com/assets/oye-bar.js?v=1"></script>
