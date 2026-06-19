@@ -32,6 +32,8 @@ jobs:
             domain: "pupgrade.app"
           - url: "https://pupgrade.dog"
             domain: "pupgrade.dog"
+          - url: "https://shoop.photo"
+            domain: "shoop.photo"
 
     steps:
       # All sites here are OYE-owned. A single PSI run swings ~10pts on Google's
