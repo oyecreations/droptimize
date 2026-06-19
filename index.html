@@ -705,28 +705,28 @@
           <span class="pt-row-sep">|</span>
           <span class="pt-row-biz">Dog Training &amp; Canine Social Media App</span>
           <div class="pt-row-final">
-            <span><span class="pt-fc pv-amber">91</span><span class="pt-fc-lbl"> SEO</span></span>
-            <span><span class="pt-fc pv-amber">83</span><span class="pt-fc-lbl"> SEC</span></span>
-            <span><span class="pt-fc pv-amber">77</span><span class="pt-fc-lbl"> PERF</span></span>
-            <span><span class="pt-fc pv-amber">93</span><span class="pt-fc-lbl"> ACC</span></span>
-            <span><span class="pt-fc pv-gold">96</span><span class="pt-fc-lbl"> BP</span></span>
+            <span><span class="pt-fc pv-gold">100</span><span class="pt-fc-lbl"> SEO</span></span>
+            <span><span class="pt-fc pv-gold">100</span><span class="pt-fc-lbl"> SEC</span></span>
+            <span><span class="pt-fc pv-gold">100</span><span class="pt-fc-lbl"> PERF</span></span>
+            <span><span class="pt-fc pv-gold">100</span><span class="pt-fc-lbl"> ACC</span></span>
+            <span><span class="pt-fc pv-gold">100</span><span class="pt-fc-lbl"> BP</span></span>
           </div>
-          <span class="pt-row-date">May 2026</span>
+          <span class="pt-row-date">Jun 2026</span>
         </div>
         <div class="pt-detail">
           <div class="pt-table-wrap">
             <table class="pt-table">
               <thead><tr><th scope="col"></th><th scope="col">1. Audit</th><th scope="col">2. Fixing</th><th scope="col">3. Pre-Launch</th><th scope="col" class="pt-th-final">4. Verified</th></tr></thead>
               <tbody>
-                <tr><th scope="row" class="pt-cat">SEO</th><td class="pv-amber">91%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pt-empty">&middot;</td></tr>
-                <tr><th scope="row" class="pt-cat">Security</th><td class="pv-amber">83%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pt-empty">&middot;</td></tr>
-                <tr><th scope="row" class="pt-cat">Performance</th><td class="pv-amber">77%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pt-empty">&middot;</td></tr>
-                <tr><th scope="row" class="pt-cat">Accessibility</th><td class="pv-amber">93%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pt-empty">&middot;</td></tr>
-                <tr><th scope="row" class="pt-cat">Best Practices</th><td class="pv-gold">96%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pt-empty">&middot;</td></tr>
+                <tr><th scope="row" class="pt-cat">SEO</th><td class="pv-amber">91%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pv-gold">100%</td></tr>
+                <tr><th scope="row" class="pt-cat">Security</th><td class="pv-amber">83%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pv-gold">100%</td></tr>
+                <tr><th scope="row" class="pt-cat">Performance</th><td class="pv-amber">77%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pv-gold">100%</td></tr>
+                <tr><th scope="row" class="pt-cat">Accessibility</th><td class="pv-amber">93%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pv-gold">100%</td></tr>
+                <tr><th scope="row" class="pt-cat">Best Practices</th><td class="pv-gold">96%</td><td class="pt-empty">&middot;</td><td class="pt-empty">&middot;</td><td class="pt-final pv-gold">100%</td></tr>
               </tbody>
             </table>
           </div>
-          <p class="pt-note">Newest OYE internal property. Initial droptimize audit just landed (2026-05-28). SPA shell with embed-heavy media grid means Performance came in at 77% (mobile LCP/CLS on the lazy-loaded media tiles). SEO 91% looks like missing meta on at least one route. Accessibility 93% is likely color contrast on dark-mode surfaces. Security 83% is a CI artifact (CF Bot Fight strips HSTS for GH runner IPs; real users see 6/6 headers, full 100%). BP 96% from a minor console warning. Gap-close in flight.</p>
+          <p class="pt-note">Verified 100 across all five categories (2026-06-19). The audit traced the low Performance (77%) and Best Practices (81%) to one root cause: Cloudflare's JavaScript Detections feature was edge-injecting a bot-detection script that burned ~2.5s of main-thread time and called deprecated browser APIs. The same edge challenge stripped HSTS and 403'd the sitemap for datacenter IPs, which capped Security. Disabling JavaScript Detections plus Bot Fight Mode on the zone cleared all three: Performance 77 to 100, Best Practices 81 to 100, Security to 100 (6/6 headers, sitemap 200). SEO and Accessibility were already 100. The site's own code needed no changes.</p>
           <div class="al-wrap">
             <button class="al-btn" data-domain="pupgrade.app" aria-expanded="false" aria-controls="al-pupgrade-app"><span class="al-icon" aria-hidden="true">&#x25BE;</span> Audit History</button>
             <div class="al-panel" id="al-pupgrade-app" hidden></div>
