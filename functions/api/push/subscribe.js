@@ -1,6 +1,8 @@
 // Creates (or updates) a monitor for one device: a site URL + cadence + alert
 // thresholds, tied to this browser's push subscription. Anonymous self-serve;
 // preferences live on the device that subscribed, no login.
+import { enforceDailyCap } from '../_lib/spend-guard.js';
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -60,6 +62,33 @@ export async function onRequestPost({ request, env }) {
   const endpointHash = await sha256b64url(sub.endpoint);
   const id = await sha256b64url(sub.endpoint + '|' + url);
 
+  // Per-device cap: a device is the push endpoint (endpointHash). The existing
+  // `device:<endpointHash>` index already lists this device's monitors, so we
+  // count it directly (no extra counter key needed). Creating a *new* monitor
+  // is rejected once a device is at the limit; updating one it already has is
+  // always allowed (the id is already in the index, so it never trips the cap).
+  const MAX_PER_DEVICE = 25;
+  const deviceIdxKey = `device:${endpointHash}`;
+  const deviceIdx = (await env.DROPTIMIZE_KV.get(deviceIdxKey, 'json')) || [];
+  const isUpdate = deviceIdx.some((m) => m.id === id);
+  if (!isUpdate && deviceIdx.length >= MAX_PER_DEVICE) {
+    return json(
+      { ok: false, error: 'too_many_monitors', message: `This device already has the maximum of ${MAX_PER_DEVICE} monitors.` },
+      429
+    );
+  }
+
+  // Global per-day spend backstop: the daily cron runs paid PSI + fetches for
+  // every stored monitor, so cap how many monitors can be created per day across
+  // all devices/IPs. enforceDailyCap returns a 429 Response when the cap is hit.
+  const capped = await enforceDailyCap(env.DROPTIMIZE_KV, 'droptimize-monitor-create', { max: 200, env });
+  if (capped) {
+    return json(
+      { ok: false, error: 'capacity', message: "We've reached today's capacity. Please try again tomorrow." },
+      429
+    );
+  }
+
   const existing = await env.DROPTIMIZE_KV.get(`monitor:${id}`, 'json');
   const record = {
     id,
@@ -81,12 +110,11 @@ export async function onRequestPost({ request, env }) {
   await env.DROPTIMIZE_KV.put(`monitor:${id}`, JSON.stringify(record));
 
   // Maintain a per-device index so the UI can list/manage this device's monitors.
-  const idxKey = `device:${endpointHash}`;
-  const idx = (await env.DROPTIMIZE_KV.get(idxKey, 'json')) || [];
+  // Reuse deviceIdx/deviceIdxKey already read above for the per-device cap check.
   const summary = { id, url, domain, frequency, minScore, alertOnDrop, alertOnDown };
-  const next = idx.filter((m) => m.id !== id);
+  const next = deviceIdx.filter((m) => m.id !== id);
   next.push(summary);
-  await env.DROPTIMIZE_KV.put(idxKey, JSON.stringify(next));
+  await env.DROPTIMIZE_KV.put(deviceIdxKey, JSON.stringify(next));
 
   return json({ ok: true, id, monitor: summary });
 }
