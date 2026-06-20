@@ -25,6 +25,14 @@ const UA =
 
 const DUE_MS = { daily: 20 * 3600e3, weekly: 6.5 * 24 * 3600e3, monthly: 27 * 24 * 3600e3 };
 
+// Constant-time compare so secret checks don't leak via response timing.
+function timingSafeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 // ---------- base64url ----------
 function b64url(bytes) {
   let bin = "";
@@ -287,7 +295,7 @@ export default {
       return new Response("ok", { status: 200 });
     }
     if (url.pathname === "/run") {
-      if (!env.MANUAL_SECRET || url.searchParams.get("key") !== env.MANUAL_SECRET) {
+      if (!timingSafeEqual(url.searchParams.get("key"), env.MANUAL_SECRET)) {
         return new Response("unauthorized", { status: 401 });
       }
       const summary = await processAll(env, { force: url.searchParams.get("force") === "1" });

@@ -3,6 +3,14 @@
 // /api/submit appends to. Gated by ADMIN_SECRET (same as /api/admin/stats);
 // the dashboard proxies these calls and attaches the X-Admin-Secret header.
 
+// Constant-time compare so secret checks don't leak via response timing.
+function timingSafeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -12,7 +20,7 @@ function json(data, status = 200) {
 
 function authed(request, env) {
   const secret = request.headers.get('X-Admin-Secret');
-  return secret && secret === env.ADMIN_SECRET;
+  return timingSafeEqual(secret, env.ADMIN_SECRET);
 }
 
 export async function onRequest(context) {

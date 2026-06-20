@@ -1,3 +1,11 @@
+// Constant-time compare so secret checks don't leak via response timing.
+function timingSafeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 // Lifetime count of one-time build purchases per plan, from completed
 // checkout sessions (metadata.plan set at checkout). Paginated, capped.
 async function countBuildSales(base, auth) {
@@ -85,7 +93,7 @@ async function fetchStripeData(env) {
 
 export async function onRequestGet({ request, env }) {
   const secret = request.headers.get('X-Admin-Secret');
-  if (!secret || secret !== env.ADMIN_SECRET) {
+  if (!timingSafeEqual(secret, env.ADMIN_SECRET)) {
     return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
   try {

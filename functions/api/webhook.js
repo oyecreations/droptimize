@@ -1,5 +1,13 @@
 // POST /api/webhook, Stripe webhook handler for Droptimize
 
+// Constant-time compare so secret checks don't leak via response timing.
+function timingSafeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 async function verifyStripeSignature(request, secret) {
   const body = await request.text();
   const sigHeader = request.headers.get("stripe-signature") || "";
@@ -16,7 +24,7 @@ async function verifyStripeSignature(request, secret) {
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signed));
   const hex = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, "0")).join("");
-  return hex === v1 ? body : null;
+  return timingSafeEqual(hex, v1) ? body : null;
 }
 
 const planLabels = {

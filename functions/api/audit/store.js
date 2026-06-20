@@ -1,3 +1,11 @@
+// Constant-time compare so secret checks don't leak via response timing.
+function timingSafeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 export async function onRequestOptions() {
   return new Response(null, { headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Audit-Secret' } });
 }
@@ -15,7 +23,7 @@ export async function onRequestPost(context) {
   }
 
   const secret = request.headers.get('X-Audit-Secret') || '';
-  if (secret !== expected) {
+  if (!timingSafeEqual(secret, expected)) {
     return new Response(JSON.stringify({ ok: false, error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
