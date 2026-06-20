@@ -1,3 +1,5 @@
+import { enforceDailyCap } from './_lib/spend-guard.js';
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -123,6 +125,11 @@ export async function onRequestPost(context) {
     const message = (formData.get('message') || '').trim();
 
     if (!name || !email) return json({ ok: false, error: 'Missing required fields' }, 400);
+
+    // Global per-day spend cap: bounds total PSI quota + outbound fetch/email spend
+    // across all IPs (this endpoint is unauthenticated and calls paid PSI + Resend).
+    const capped = await enforceDailyCap(env.DROPTIMIZE_KV, 'droptimize-submit', { max: 300, env });
+    if (capped) return json({ ok: false, error: "We've reached today's capacity. Please try again tomorrow." }, 429);
 
     // Run audit concurrently with 25s timeout
     let scores = null;
