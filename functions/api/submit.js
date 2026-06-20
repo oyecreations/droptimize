@@ -10,6 +10,21 @@ export async function onRequestOptions() {
   return new Response(null, { headers: CORS });
 }
 
+// Block SSRF to internal/metadata targets. Workers can't resolve DNS, so reject
+// private/loopback/link-local IP literals + non-public hostnames; require http(s).
+function isSafePublicUrl(raw) {
+  let u;
+  try { u = new URL(String(raw)); } catch { return false; }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+  const host = u.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.internal') || host.endsWith('.local') || host === 'metadata.google.internal') return false;
+  if (host.includes(':')) return !(host === '::1' || host === '::' || host.startsWith('fe80') || host.startsWith('fc') || host.startsWith('fd'));
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
+    return ![/^127\./,/^10\./,/^192\.168\./,/^169\.254\./,/^172\.(1[6-9]|2\d|3[01])\./,/^0\./,/^100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\./].some(re => re.test(host));
+  }
+  return true;
+}
+
 async function runPSI(url, apiKey) {
   const cats = 'category=SEO&category=PERFORMANCE&category=BEST_PRACTICES&category=ACCESSIBILITY';
   const key  = apiKey ? `&key=${apiKey}` : '';
@@ -131,9 +146,11 @@ export async function onRequestPost(context) {
     const capped = await enforceDailyCap(env.DROPTIMIZE_KV, 'droptimize-submit', { max: 300, env });
     if (capped) return json({ ok: false, error: "We've reached today's capacity. Please try again tomorrow." }, 429);
 
-    // Run audit concurrently with 25s timeout
+    // Run audit concurrently with 25s timeout. A website that fails the SSRF
+    // check is treated as no website: skip all fetch/PSI work, keep the rest of
+    // the submission/email flow intact.
     let scores = null;
-    if (website) {
+    if (website && isSafePublicUrl(website)) {
       const timeout = new Promise(resolve => setTimeout(() => resolve(null), 25000));
       const audit   = Promise.all([
         runPSI(website, env.PSI_KEY).catch(() => null),

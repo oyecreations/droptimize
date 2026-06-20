@@ -25,6 +25,21 @@ const UA =
 
 const DUE_MS = { daily: 20 * 3600e3, weekly: 6.5 * 24 * 3600e3, monthly: 27 * 24 * 3600e3 };
 
+// Block SSRF to internal/metadata targets. Workers can't resolve DNS, so reject
+// private/loopback/link-local IP literals + non-public hostnames; require http(s).
+function isSafePublicUrl(raw) {
+  let u;
+  try { u = new URL(String(raw)); } catch { return false; }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+  const host = u.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.internal') || host.endsWith('.local') || host === 'metadata.google.internal') return false;
+  if (host.includes(':')) return !(host === '::1' || host === '::' || host.startsWith('fe80') || host.startsWith('fc') || host.startsWith('fd'));
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
+    return ![/^127\./,/^10\./,/^192\.168\./,/^169\.254\./,/^172\.(1[6-9]|2\d|3[01])\./,/^0\./,/^100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\./].some(re => re.test(host));
+  }
+  return true;
+}
+
 // Constant-time compare so secret checks don't leak via response timing.
 function timingSafeEqual(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
@@ -218,6 +233,20 @@ async function processAll(env, opts) {
         continue;
       }
       if (!rec || rec.paused) continue;
+
+      // SSRF guard: never let the cron point its fetch/PSI probes at internal,
+      // loopback, link-local, or metadata hosts. Drop the monitor entirely so a
+      // poisoned stored URL can't be reattempted on the next run.
+      if (!isSafePublicUrl(rec.url)) {
+        try {
+          await removeMonitor(env, rec);
+          summary.removed++;
+        } catch (e) {
+          summary.errors++;
+        }
+        continue;
+      }
+
       if (!opts.force && !isDue(rec, now)) continue;
       summary.due++;
 
