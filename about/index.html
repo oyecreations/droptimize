@@ -418,6 +418,24 @@ footer .f-copy { font-size: 12px; color: var(--muted); }
           </div>
         </div>
 
+        <div class="faq-item" role="listitem">
+          <button class="faq-q" aria-expanded="false">
+            If my site scores badly, do you just rebuild the whole thing?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a" role="region">
+            <p>No. Tearing down a working website and starting over is the most expensive, riskiest move on the table, and most of the time it is unnecessary. We audit first, find the actual cause, and fix the smallest thing that moves the score. A rebuild is the last resort, never the reflex.</p>
+            <p>The professional version: a low Lighthouse score (Google's standard report card for a page's speed, accessibility, SEO, and security) almost always traces to a short list of specific, fixable faults, not a rotten foundation. Render-blocking resources (files the browser must finish downloading before it can paint anything on screen). Unsized images that shove the layout around as they load. Missing cache headers (the note that tells a browser "you already have this file, do not fetch it again"). A gap in the content-security-policy (the rule that stops a malicious script from running on your page). Each of those is a targeted repair measured in hours. None of them is a reason to throw the site away.</p>
+            <p>A full rebuild does reset your technical debt (the pile of shortcuts and aging decisions that builds up in any codebase) back to zero, but it also discards every edge case the current site already handles and every quirk it learned the hard way. So we only recommend one when the foundation itself is the problem: a platform so layered that patching it costs more than a clean build, or security holes baked so deep that fixing them one at a time is slower than starting fresh. Even then you get the reasoning, in plain numbers, before we touch a thing.</p>
+            <div class="callout">We treat your website the way a good mechanic treats a car that still runs: diagnose the real fault, replace the part that failed, and only bring up a new engine when the old one genuinely cannot be saved. We do not recreate sites on a whim, and we never rebuild just to pad an invoice.</div>
+            <div class="pill-row">
+              <span class="pill good">Audit and diagnose first</span>
+              <span class="pill good">Fix in place when we can</span>
+              <span class="pill gold">Rebuild only when the foundation is the problem</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
