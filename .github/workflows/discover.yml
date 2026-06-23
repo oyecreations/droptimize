@@ -1,0 +1,54 @@
+name: droptimize-discover
+
+# Daily automated lead discovery — Droptimize's twin of surescout-winback.yml. Tops each ACTIVE
+# territory back up to its daily_target OPEN leads (no further), so spend self-limits to how fast the
+# operator works the board. Stays inside Droptimize's 25% (~1,250/mo) share of the shared free Google
+# Places quota; SureScout holds the other 75% (~3,750/mo). Both are PAUSED until 2026-07-01 (Google
+# budget reset) by the date guard below, so zero Places spend happens before then.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "1 = plan only (no Places calls, no writes)"
+        required: false
+        default: "0"
+      cap:
+        description: "Hard cap on Place Details calls this run (blank = sum of territory needs, ceiling 50)"
+        required: false
+        default: ""
+      mode:
+        description: "topup (refill to target) or fresh (always discover up to target)"
+        required: false
+        default: "topup"
+  schedule:
+    - cron: "0 15 * * *"   # daily 15:00 UTC (~8am PT), one hour after SureScout to avoid co-firing
+
+concurrency:
+  group: droptimize-discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_DROPTIMIZE_URL: ${{ secrets.SUPABASE_DROPTIMIZE_URL }}
+      SUPABASE_DROPTIMIZE_SERVICE_KEY: ${{ secrets.SUPABASE_DROPTIMIZE_SERVICE_KEY }}
+      PLACES_KEY: ${{ secrets.PLACES_KEY }}
+      PSI_KEY: ${{ secrets.PSI_KEY }}
+      DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
+      DISCOVER_CAP: ${{ github.event.inputs.cap || '' }}
+      DISCOVER_MODE: ${{ github.event.inputs.mode || 'topup' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Discover + qualify leads (budget-capped)
+        run: |
+          if [ "$DRY_RUN" != "1" ] && [ "$(date -u +%Y%m%d)" -lt 20260701 ]; then
+            echo "::notice::Droptimize discovery paused until 2026-07-01 Google budget reset — skipping (no Places spend)."; exit 0;
+          fi
+          if [ -z "$SUPABASE_DROPTIMIZE_SERVICE_KEY" ] || { [ -z "$PLACES_KEY" ] && [ "$DRY_RUN" != "1" ]; }; then
+            echo "::warning::required secrets missing — skipping (no spend)."; exit 0;
+          fi
+          node scripts/discover-leads.mjs
