@@ -120,7 +120,6 @@ function buildCustomerEmail(name, url, scores) {
     <p style="color:#8C8C8C;font-size:14px;line-height:1.7;margin:0 0 20px;">Here's why those numbers matter right now: companies are already wiring AI into how they vet who they work with, and that AI reads the same signals you see above. Weak security, slow load times, and accessibility gaps get a site quietly filtered out before a human ever sees it. Google search is already scoring these signals, and most social platforms are soon to follow. The AI isn't wrong to do it. Those are real flaws, and they're costing you introductions you'll never know you lost.</p>
     <p style="color:#8C8C8C;font-size:14px;line-height:1.7;margin:0 0 28px;">We'll follow up shortly with a full breakdown - what's pulling each score down and exactly what it would take to hit 100% across the board. And when you rebuild with us, 10% of the project goes to a 501(c)(3) you choose, so the fix funds something that matters.</p>
     <a href="https://droptimize.org/#pricing" style="display:inline-block;background:#C9A84C;color:#111111;font-family:monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;padding:13px 28px;text-decoration:none;font-weight:700;">See rebuild packages &rarr;</a>
-    <p style="color:#3A3A3A;font-size:11px;margin-top:48px;line-height:1.6;">droptimize.org &nbsp;&middot;&nbsp; by OYE Creations LLC<br>10% of every project donated to a 501(c)(3) of your choice.</p>
   </div>
 </body>
 </html>`;
