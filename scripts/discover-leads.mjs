@@ -12,14 +12,15 @@
 // marked 'exhausted' and the next 'paused' territory by sort_order is auto-activated. So discovery
 // works one metro to completion, then expands to the next (San Diego → Orange County → LA → ...).
 //
-// Stays free: each lead needs a Place Details call for the WEBSITE, which is a Contact-Data /
-// Enterprise-tier SKU with only ~1,000 free lookups/month (verified 2026-06-22). So daily_target is
-// 33 (~990/mo) to hold discovery at $0. Other notes:
-//   - Only PAID call is Google Places (Text Search to find shops + Place Details for the website).
+// Uses the NEW Places API (places.googleapis.com searchText) like SureScout — the legacy Places API
+// is NOT enabled on this key (verified 2026-06-22: legacy returns REQUEST_DENIED). searchText returns
+// each shop's website INLINE, so one Text Search call yields up to 20 leads with no per-lead lookup.
+//   - Only PAID call is Places API (New) Text Search; requesting websiteUri makes it the Enterprise
+//     SKU (~1,000 free calls/month, SHARED with SureScout since both use the same key). Each call
+//     returns up to 20 places, so daily_target 33 costs only a handful of calls/day.
 //   - PSI (audit), header fetch, and email scrape are free / separate quotas.
-//   - Dedupe by place_id AND host BEFORE spending a Place Details call, so dupes cost only the
-//     cheap shared Text Search page, never per-lead Details.
-//   - Hard per-run cap on Place Details (DISCOVER_CAP, default = sum of territory needs, ceiling 50).
+//   - Dedupe by place_id AND host so a known shop is never re-audited.
+//   - Hard per-run cap on Text Search calls (DISCOVER_CAP, default ~ needs/3 + buffer, ceiling 30).
 //
 // Safe by construction: the workflow holds all spend until 2026-07-01 (Google budget reset); this
 // script no-ops cleanly when keys are missing; DRY_RUN=1 reports each territory's plan (how many it
@@ -38,7 +39,7 @@ const DRY_RUN = process.env.DRY_RUN === '1';
 const FULL_PSI = process.env.FULL_PSI === '1';
 const MODE = (process.env.DISCOVER_MODE || 'topup').toLowerCase();   // topup = refill to target; fresh = always discover up to target
 const CAP_OVERRIDE = parseInt(process.env.DISCOVER_CAP || '', 10);   // hard ceiling on Place Details calls this run
-const HARD_DETAILS_CEILING = 40;                                     // absolute backstop regardless of need (covers a 33/day territory)
+const HARD_CALL_CEILING = 30;                                       // absolute backstop on Text Search calls per run (each returns up to 20 places)
 const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36';
 
 if (!SB || !SKEY) { console.error('missing SUPABASE_(DROPTIMIZE_)URL / SERVICE_KEY'); process.exit(1); }
@@ -75,29 +76,31 @@ const isRepairShop = (name, types = []) => types.some((t) => REPAIR_TYPE.has(t))
 // ---------------------------------------------------------------------------- Google Places (legacy)
 const INDUSTRY_QUERY = { legal: 'law firm', accounting: 'accounting firm', other: 'business' };
 
-// One Text Search page (1 billable call). Returns {results, nextPageToken}. location+radius bias the
-// search to the territory ring; radius is capped at the 50km legacy maximum.
-async function textSearchPage(query, lat, lng, radiusM, pageToken) {
-  const u = new URL('https://maps.googleapis.com/maps/api/place/textsearch/json');
-  u.searchParams.set('query', query);
-  u.searchParams.set('key', PLACES_KEY);
-  if (lat != null && lng != null) { u.searchParams.set('location', `${lat},${lng}`); u.searchParams.set('radius', String(Math.min(Math.round(radiusM), 50000))); }
-  if (pageToken) u.searchParams.set('pagetoken', pageToken);
-  const data = await fetchJson(u.toString());
-  if (data._error || data._httpError || (data.status && data.status !== 'OK' && data.status !== 'ZERO_RESULTS')) {
-    throw new Error(`Places textsearch failed: ${data.status || data._httpError || data._error}`);
-  }
-  return { results: data.results || [], nextPageToken: data.next_page_token || null };
-}
-
-// One Place Details call (1 billable call) — the website/phone the Text Search omits.
-async function placeDetails(placeId) {
-  const u = new URL('https://maps.googleapis.com/maps/api/place/details/json');
-  u.searchParams.set('place_id', placeId);
-  u.searchParams.set('fields', 'name,website,formatted_phone_number,formatted_address');
-  u.searchParams.set('key', PLACES_KEY);
-  const d = await fetchJson(u.toString());
-  return d.result || {};
+// One Text Search page on the NEW Places API (places.googleapis.com) — 1 billable Enterprise call that
+// returns up to 20 places WITH their website in the response. (The legacy textsearch+details flow is
+// gone: the legacy Places API is not enabled on this key, and the New API gives the website inline, so
+// there is no separate per-result Place Details call.) locationBias circle keeps it in the ring (50km max).
+const SEARCH_FIELDS = 'places.id,places.displayName,places.websiteUri,places.nationalPhoneNumber,places.formattedAddress,places.types,places.businessStatus,nextPageToken';
+async function searchTextPage(query, lat, lng, radiusM, pageToken) {
+  const body = { textQuery: query };
+  if (lat != null && lng != null) body.locationBias = { circle: { center: { latitude: lat, longitude: lng }, radius: Math.min(Math.round(radiusM), 50000) } };
+  if (pageToken) body.pageToken = pageToken;
+  let res, data;
+  try {
+    res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': PLACES_KEY, 'X-Goog-FieldMask': SEARCH_FIELDS },
+      body: JSON.stringify(body),
+    });
+    data = await res.json();
+  } catch (e) { throw new Error(`searchText fetch failed: ${e.message}`); }
+  if (!res.ok || data.error) throw new Error(`searchText failed: ${data.error?.status || res.status} ${data.error?.message || ''}`.trim());
+  const results = (data.places || []).map((p) => ({
+    place_id: p.id, name: p.displayName?.text || '', website: p.websiteUri || '',
+    phone: p.nationalPhoneNumber || '', address: p.formattedAddress || '',
+    types: p.types || [], businessStatus: p.businessStatus || null,
+  }));
+  return { results, nextPageToken: data.nextPageToken || null };
 }
 
 // ---------------------------------------------------------------------------- email scrape (free)
@@ -253,24 +256,22 @@ async function runTerritory(t, known, budget) {
   let inserted = 0, freshCandidates = 0;
   const industries = (t.industries && t.industries.length) ? t.industries : ['legal'];
   for (const industry of industries) {
-    if (inserted >= need || budget.details <= 0) break;
+    if (inserted >= need || budget.calls >= budget.max) break;
     const query = `${INDUSTRY_QUERY[industry] || INDUSTRY_QUERY.other}${t.region_label ? ` in ${t.region_label}` : ''}`;
     let pageToken = null;
-    for (let page = 0; page < 3 && inserted < need && budget.details > 0; page++) {
+    for (let page = 0; page < 3 && inserted < need && budget.calls < budget.max; page++) {
       let res;
-      try { res = await textSearchPage(query, t.anchor_lat, t.anchor_lng, Number(t.radius_km) * 1000, pageToken); budget.text++; }
-      catch (e) { log(`  ! ${industry} text search failed: ${e.message}`); break; }
+      try { res = await searchTextPage(query, t.anchor_lat, t.anchor_lng, Number(t.radius_km) * 1000, pageToken); budget.calls++; }
+      catch (e) { log(`  ! ${industry} search failed: ${e.message}`); break; }
       for (const r of res.results) {
-        if (inserted >= need || budget.details <= 0) break;
+        if (inserted >= need) break;
         if (isRepairShop(r.name, r.types)) continue;
-        if (r.place_id && known.placeIds.has(r.place_id)) continue;   // known shop — costs no Details call
+        if (r.businessStatus === 'CLOSED_PERMANENTLY') continue;
+        if (r.place_id && known.placeIds.has(r.place_id)) continue;   // already a lead
+        if (r.place_id) known.placeIds.add(r.place_id);               // a new shop in the ring
         freshCandidates++;
-        if (r.place_id) known.placeIds.add(r.place_id);               // avoid re-processing within the run
-        // Spend ONE Place Details call to get the website.
-        budget.details--;
-        const d = await placeDetails(r.place_id); await sleep(120);
-        const website = d.website || ''; const host = hostOf(website);
-        if (!website || !host) continue;
+        const website = r.website || ''; const host = hostOf(website);
+        if (!website || !host) continue;                              // no site listed → nothing to audit
         if (known.hosts.has(host)) continue;                          // domain already a lead (unique host)
         known.hosts.add(host);
         const emails = await enrichEmail(website);
@@ -281,7 +282,7 @@ async function runTerritory(t, known, budget) {
         const mail = buildEmail(r.name, host, qual.scores, industry);
         const ok = await insertLead({
           territory_id: t.id, owner_id: t.owner_id || null, business_name: r.name, website, host,
-          place_id: r.place_id, city: t.region_label || null, state: null, phone: d.formatted_phone_number || null,
+          place_id: r.place_id, city: t.region_label || null, state: null, phone: r.phone || null,
           email: emails[0] || null, emails, industry, scores: qual.scores, pain, hook,
           failing_audits: qual.failing_audits, security_headers: qual.security_headers,
           email_subject: mail.subject, email_draft: mail.body, status: 'new',
@@ -289,7 +290,7 @@ async function runTerritory(t, known, budget) {
         if (ok) { inserted++; log(`  + ${r.name} (${host}) pain ${pain} [sec ${qual.scores.security} seo ${qual.scores.seo} perf ${qual.scores.performance}]${emails[0] ? ' ✉' : ''}`); }
       }
       pageToken = res.nextPageToken; if (!pageToken) break;
-      await sleep(2000);   // Places requires a delay before a page token activates.
+      await sleep(1500);   // brief pause before requesting the next page token
     }
   }
 
@@ -313,18 +314,17 @@ async function main() {
   if (!territories.length) { log('No active territories — nothing to discover.'); return; }
   const known = await loadKnown();
   const needSum = territories.reduce((s, t) => s + Math.max(0, t.daily_target), 0);
-  const cap = Math.min(HARD_DETAILS_CEILING, Number.isFinite(CAP_OVERRIDE) && CAP_OVERRIDE > 0 ? CAP_OVERRIDE : needSum || 40);
-  const budget = { details: cap, text: 0 };
-  log(`${DRY_RUN ? '[DRY] ' : ''}Droptimize discovery: ${territories.length} active territory(ies), ${known.hosts.size} known leads, Place-Details cap ${cap} this run (mode=${MODE}).`);
+  const maxCalls = Math.min(HARD_CALL_CEILING, Number.isFinite(CAP_OVERRIDE) && CAP_OVERRIDE > 0 ? CAP_OVERRIDE : Math.max(12, Math.ceil((needSum || 33) / 3) + 4));
+  const budget = { calls: 0, max: maxCalls };
+  log(`${DRY_RUN ? '[DRY] ' : ''}Droptimize discovery: ${territories.length} active territory(ies), ${known.hosts.size} known leads, Text-Search-call cap ${maxCalls} this run (mode=${MODE}).`);
 
   let totalInserted = 0;
   for (const t of territories) {
-    if (budget.details <= 0) { log(`\n(budget cap reached — ${territories.indexOf(t)} territory(ies) left for next run)`); break; }
+    if (budget.calls >= budget.max) { log(`\n(call cap reached — ${territories.length - territories.indexOf(t)} territory(ies) left for next run)`); break; }
     const { inserted } = await runTerritory(t, known, budget);
     totalInserted += inserted;
   }
-  const detailsUsed = cap - budget.details;
-  log(`\n${DRY_RUN ? '[DRY] ' : ''}Done: ${totalInserted} new lead(s). Google Places spent this run: ${budget.text} Text Search + ${detailsUsed} Place Details = ${budget.text + detailsUsed} billable calls.`);
+  log(`\n${DRY_RUN ? '[DRY] ' : ''}Done: ${totalInserted} new lead(s). Places API (New) spent this run: ${budget.calls} Text Search call(s) (each returns up to 20 places, website inline).`);
 }
 
 main().catch((e) => { console.error('✗', e.stack || e.message || e); process.exit(1); });
