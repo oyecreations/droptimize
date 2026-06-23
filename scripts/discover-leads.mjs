@@ -7,7 +7,12 @@
 // pace. Discovery widens the territory's radius ring as the current ring mines out, exactly as the
 // schema comment describes, until max_radius_km, then marks the territory 'exhausted'.
 //
-// Stays inside Droptimize's 25% share (~1,250/mo) of the shared free Google Places quota:
+// Territories run as an ORDERED CHAIN: only 'active' ones discover; 'paused' ones wait their turn.
+// When a territory mines out its full radius ring (reaches max_radius_km with nothing new) it is
+// marked 'exhausted' and the next 'paused' territory by sort_order is auto-activated. So discovery
+// works one metro to completion, then expands to the next (San Diego → Orange County → LA → ...).
+//
+// Stays inside Droptimize's 40% share (~2,000/mo) of the shared free Google Places quota:
 //   - Only PAID call is Google Places (Text Search to find shops + Place Details for the website).
 //   - PSI (audit), header fetch, and email scrape are free / separate quotas.
 //   - Dedupe by place_id AND host BEFORE spending a Place Details call, so dupes cost only the
@@ -31,7 +36,7 @@ const DRY_RUN = process.env.DRY_RUN === '1';
 const FULL_PSI = process.env.FULL_PSI === '1';
 const MODE = (process.env.DISCOVER_MODE || 'topup').toLowerCase();   // topup = refill to target; fresh = always discover up to target
 const CAP_OVERRIDE = parseInt(process.env.DISCOVER_CAP || '', 10);   // hard ceiling on Place Details calls this run
-const HARD_DETAILS_CEILING = 50;                                     // absolute backstop regardless of need
+const HARD_DETAILS_CEILING = 70;                                     // absolute backstop regardless of need (covers a 65/day territory)
 const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36';
 
 if (!SB || !SKEY) { console.error('missing SUPABASE_(DROPTIMIZE_)URL / SERVICE_KEY'); process.exit(1); }
@@ -217,7 +222,17 @@ async function countOpen(territoryId) {
   const cr = r.headers.get('content-range') || '';   // "0-0/<total>"
   const m = /\/(\d+)$/.exec(cr); return m ? parseInt(m[1], 10) : 0;
 }
-async function loadTerritories() { const r = await sb(`territories?select=*&status=eq.active&order=created_at.asc`); const j = await r.json(); return Array.isArray(j) ? j : []; }
+async function loadTerritories() { const r = await sb(`territories?select=*&status=eq.active&order=sort_order.asc,created_at.asc`); const j = await r.json(); return Array.isArray(j) ? j : []; }
+// Promote the next metro in the chain (lowest sort_order among 'paused') to 'active'. Called when a
+// territory exhausts, so discovery flows San Diego → Orange County → LA → ... with no manual step.
+async function activateNextTerritory() {
+  const r = await sb(`territories?select=id,name&status=eq.paused&order=sort_order.asc,created_at.asc&limit=1`);
+  const j = await r.json();
+  if (!Array.isArray(j) || !j[0]) { log('  (chain complete — no paused territory left to expand into)'); return null; }
+  if (!DRY_RUN) await sb(`territories?id=eq.${j[0].id}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ status: 'active' }) });
+  log(`  ▲ expanding north: activated next territory "${j[0].name}"`);
+  return j[0].name;
+}
 async function patchTerritory(id, patch) { if (DRY_RUN) return; await sb(`territories?id=eq.${id}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(patch) }); }
 async function insertLead(row) {
   if (DRY_RUN) return true;
@@ -279,12 +294,14 @@ async function runTerritory(t, known, budget) {
   // Radius ring: under-filled means the current ring is mining out. Widen it for next time, or retire
   // the territory once we are at max radius and still finding nothing new.
   const patch = { last_run_at: new Date().toISOString() };
+  let exhausted = false;
   if (inserted < need) {
     const r = Number(t.radius_km), step = Number(t.radius_step_km), max = Number(t.max_radius_km);
     if (r < max) { patch.radius_km = Math.min(max, r + step); log(`  ↔ ring widening ${r}→${patch.radius_km}km (under-filled ${inserted}/${need})`); }
-    else if (freshCandidates === 0) { patch.status = 'exhausted'; log(`  ⊘ ${t.name} exhausted (max radius, no new shops)`); }
+    else if (freshCandidates === 0) { patch.status = 'exhausted'; exhausted = true; log(`  ⊘ ${t.name} exhausted (max radius, no new shops)`); }
   }
   await patchTerritory(t.id, patch);
+  if (exhausted) await activateNextTerritory();   // metro mined out → expand to the next one north
   return { inserted, freshCandidates };
 }
 
