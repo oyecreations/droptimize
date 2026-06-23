@@ -2,8 +2,8 @@ name: droptimize-discover
 
 # Daily automated lead discovery — Droptimize's twin of surescout-winback.yml. Tops each ACTIVE
 # territory back up to its daily_target OPEN leads (no further), so spend self-limits to how fast the
-# operator works the board. Stays inside Droptimize's 40% (~2,000/mo) share of the shared free Google
-# Places quota; SureScout holds the other 60% (~3,000/mo). Both are PAUSED until 2026-07-01 (Google
+# operator works the board. The website lookup each lead needs is a Contact-Data/Enterprise SKU with
+# only ~1,000 free/month, so daily_target is 33 (~990/mo) to stay at $0. Both are PAUSED until 2026-07-01 (Google
 # budget reset) by the date guard below, so zero Places spend happens before then.
 on:
   workflow_dispatch:

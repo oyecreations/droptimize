@@ -12,7 +12,9 @@
 // marked 'exhausted' and the next 'paused' territory by sort_order is auto-activated. So discovery
 // works one metro to completion, then expands to the next (San Diego → Orange County → LA → ...).
 //
-// Stays inside Droptimize's 40% share (~2,000/mo) of the shared free Google Places quota:
+// Stays free: each lead needs a Place Details call for the WEBSITE, which is a Contact-Data /
+// Enterprise-tier SKU with only ~1,000 free lookups/month (verified 2026-06-22). So daily_target is
+// 33 (~990/mo) to hold discovery at $0. Other notes:
 //   - Only PAID call is Google Places (Text Search to find shops + Place Details for the website).
 //   - PSI (audit), header fetch, and email scrape are free / separate quotas.
 //   - Dedupe by place_id AND host BEFORE spending a Place Details call, so dupes cost only the
@@ -36,7 +38,7 @@ const DRY_RUN = process.env.DRY_RUN === '1';
 const FULL_PSI = process.env.FULL_PSI === '1';
 const MODE = (process.env.DISCOVER_MODE || 'topup').toLowerCase();   // topup = refill to target; fresh = always discover up to target
 const CAP_OVERRIDE = parseInt(process.env.DISCOVER_CAP || '', 10);   // hard ceiling on Place Details calls this run
-const HARD_DETAILS_CEILING = 70;                                     // absolute backstop regardless of need (covers a 65/day territory)
+const HARD_DETAILS_CEILING = 40;                                     // absolute backstop regardless of need (covers a 33/day territory)
 const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36';
 
 if (!SB || !SKEY) { console.error('missing SUPABASE_(DROPTIMIZE_)URL / SERVICE_KEY'); process.exit(1); }
