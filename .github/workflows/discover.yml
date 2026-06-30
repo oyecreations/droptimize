@@ -1,11 +1,13 @@
 name: droptimize-discover
 
-# Daily automated lead discovery — Droptimize's twin of surescout-winback.yml. Tops each ACTIVE
-# territory back up to its daily_target OPEN leads (no further), so spend self-limits to how fast the
-# operator works the board. Discovery uses Places API (New) Text Search (Enterprise SKU, ~1,000 free
+# Daily automated lead discovery — Droptimize's twin of surescout-winback.yml. Runs FRESH each day:
+# discovers up to each ACTIVE territory's daily_target NEW leads every run regardless of how many are
+# unworked, so the board keeps filling whether or not the operator clears it (deliberate: a growing
+# backlog is the point). Discovery uses Places API (New) Text Search (Enterprise SKU, ~1,000 free
 # calls/month SHARED with SureScout via the same key); each call returns up to 20 shops with website
-# inline, so daily_target 33 costs only a few calls/day. Both are PAUSED until 2026-07-01 (Google
-# budget reset) by the date guard below, so zero Places spend happens before then.
+# inline, so daily_target 100 costs ~8 calls/day. Dedup by place_id + host means no repeats — only
+# genuinely new firms, widening the ring (then chaining to the next metro) as each fills. PAUSED until
+# 2026-07-01 (Google budget reset) by the date guard below, so zero Places spend happens before then.
 on:
   workflow_dispatch:
     inputs:
@@ -18,9 +20,9 @@ on:
         required: false
         default: ""
       mode:
-        description: "topup (refill to target) or fresh (always discover up to target)"
+        description: "fresh (always discover up to target, daily) or topup (only refill what you cleared)"
         required: false
-        default: "topup"
+        default: "fresh"
   schedule:
     - cron: "0 15 * * *"   # daily 15:00 UTC (~8am PT), one hour after SureScout to avoid co-firing
 
@@ -38,7 +40,7 @@ jobs:
       PSI_KEY: ${{ secrets.PSI_KEY }}
       DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
       DISCOVER_CAP: ${{ github.event.inputs.cap || '' }}
-      DISCOVER_MODE: ${{ github.event.inputs.mode || 'topup' }}
+      DISCOVER_MODE: ${{ github.event.inputs.mode || 'fresh' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
