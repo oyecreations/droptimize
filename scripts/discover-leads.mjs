@@ -140,7 +140,15 @@ async function psiOnce(url) {
   u.searchParams.set('url', url); u.searchParams.set('strategy', 'mobile');
   for (const c of ['SEO', 'PERFORMANCE', 'BEST_PRACTICES', 'ACCESSIBILITY']) u.searchParams.append('category', c);
   u.searchParams.set('key', PSI_KEY);
-  return fetchJson(u.toString());
+  // PSI intermittently 500s ("lighthouseError: Something went wrong") or returns empty on a perfectly
+  // healthy site. Retry with backoff so a transient failure is NEVER recorded as a real all-zero
+  // audit — sending a prospect a bogus 0/100 is the fastest way to lose credibility.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const d = await fetchJson(u.toString());
+    if (d?.lighthouseResult) return d;
+    if (attempt < 2) await sleep(4000 * (attempt + 1));
+  }
+  return {};   // genuinely failed after retries → qualify() reports psi_runs:0, caller must NOT store this as a lead
 }
 function scoresFromPsi(data) { const c = data?.lighthouseResult?.categories || {}; const row = {}; for (const k of PSI_CATS) row[k] = Math.round((c[k]?.score ?? 0) * 100); return row; }
 function topFailing(data, catKey, limit = 6) {
@@ -276,6 +284,7 @@ async function runTerritory(t, known, budget) {
         known.hosts.add(host);
         const emails = await enrichEmail(website);
         const qual = await qualify(website);
+        if (!qual.psi_runs) { log(`  · ${r.name} (${host}) — PSI failed after retries; skipped (no bogus zero-audit). Not inserted, so a later run re-audits it fresh.`); continue; }
         if (!isContactable(qual.scores)) { log(`  · ${r.name} (${host}) already scores well — skipped`); continue; }
         const pain = painScore(qual.scores, industry);
         const hook = leadHook(qual.scores, industry);
